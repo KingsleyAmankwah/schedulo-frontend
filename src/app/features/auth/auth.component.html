@@ -1,1 +1,144 @@
-<p>auth works!</p>
+<div
+  class="overflow-y-auto overflow-x-hidden bg-black opacity-80 fixed top-0 right-0 left-0 bottom-0 z-20 justify-center items-center w-full"
+></div>
+
+<div
+  *ngIf="authMode"
+  class="w-[40%] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col h-[80vh] justify-center items-center rounded-lg z-50 bg-white"
+>
+  <div>
+    <button
+      (click)="triggerModalClose()"
+      type="button"
+      class="end-2.5 bg-black text-white rounded-lg w-8 h-8 ms-auto inline-flex justify-center items-center text-xs absolute top-2"
+    >
+      <svg
+        class="w-3 h-3"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 14 14"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+        />
+      </svg>
+    </button>
+    <!-- Modal header -->
+    <div class="flex justify-between">
+      <div class="flex flex-col">
+        <h3 class="text-xl text-gray-900">
+          {{ authMode === "login" ? "Welcome back!" : "Hey there!" }}
+        </h3>
+        <p>
+          {{
+            authMode === "login"
+              ? "Please login to your account"
+              : "Create an account"
+          }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    @if (authMode === 'login') {
+
+    <ng-container>
+      <form [formGroup]="loginForm">
+        @for (input of LoginInputFields; track $index) {
+        <app-custom-input
+          [inputType]="input.type"
+          [placeholder]="input.placeholder"
+          [inputControl]="formControlName(input.control)"
+          [label]="input.label"
+          [required]="true"
+          [errorMessage]="input.errorMessage"
+        >
+          <div left-icon>
+            <img [src]="input.icon" alt="" />
+          </div>
+        </app-custom-input>
+        }
+
+        <app-custom-button [buttonType]="'submit'" [text]="'Login'" />
+      </form>
+
+      <p class="text-end cursor-pointer hover:underline pt-1">Lost Password?</p>
+      <p class="text-center py-2">
+        Don't have an account?
+        <button class="text-primary-100 hover:underline" (click)="switchMode()">
+          Create an account
+        </button>
+      </p>
+    </ng-container>
+
+    }@else if (authMode === 'register'){
+
+    <ng-container>
+      <form [formGroup]="registerForm">
+        @for (input of RegisterInputFields; track $index) {
+        <app-custom-input
+          [inputType]="input.type"
+          [placeholder]="input.placeholder"
+          [inputControl]="inputControlName(input.control)"
+          [label]="input.label"
+          [required]="true"
+          [errorMessage]="input.errorMessage"
+        >
+          <div left-icon>
+            <img [src]="input.icon" alt="" />
+          </div>
+        </app-custom-input>
+        }
+
+        <app-custom-button [buttonType]="'submit'" [text]="'Sign up'" />
+      </form>
+
+      <p class="text-center pt-2">
+        Already have an account?
+        <button class="text-primary-100 hover:underline" (click)="switchMode()">
+          Login
+        </button>
+      </p>
+    </ng-container>
+
+    }@else {
+
+    <ng-container> No Content here </ng-container>
+    }
+
+    <div
+      class="z-50 flex items-center my-2 before:flex-1 before:border-t before:border-black before:mt-0.5 after:flex-1 after:border-t after:border-black after:mt-0.5"
+    >
+      <p class="text-center font-semibold mx-4 mb-0">OR</p>
+    </div>
+
+    <div class="space-y-2">
+      <button
+        class="flex w-full items-center justify-center bg-white border border-gray-300 rounded-lg p-2 hover:bg-gray-100"
+      >
+        <img
+          src="/assets/google-logo.png"
+          alt="Google Icon"
+          class="w-8 h-8 mr-2"
+        />
+        <span class="text-gray-700">Continue with Google</span>
+      </button>
+
+      <button
+        class="flex w-full items-center justify-center bg-white border border-gray-300 rounded-lg p-2 hover:bg-gray-100"
+      >
+        <img
+          src="/assets/github-logo.svg"
+          alt="GitHub Icon"
+          class="w-5 h-5 mr-2"
+        />
+        <span class="text-gray-700">Continue with GitHub</span>
+      </button>
+    </div>
+  </div>
+</div>
