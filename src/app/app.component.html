@@ -1,1 +1,10 @@
-<app-navbar /> <router-outlet />
+<app-navbar
+  (openLoginModal)="onOpenLoginModal()"
+  (openRegisterModal)="onOpenRegisterModal()"
+/>
+<app-auth
+  *ngIf="isAuthModalOpen"
+  [authMode]="authMode"
+  (closeModal)="onCloseAAuthModal()"
+/>
+<router-outlet />
