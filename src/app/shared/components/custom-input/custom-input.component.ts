@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -9,7 +9,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './custom-input.component.html',
   styleUrl: './custom-input.component.css',
 })
-export class CustomInputComponent {
+export class CustomInputComponent implements OnInit {
   @Input() label = '';
   @Input() placeholder = '';
   @Input() inputType = '';
@@ -17,10 +17,15 @@ export class CustomInputComponent {
   @Input() inputControl!: FormControl;
   @Input() errorMessage: Record<string, string> = {};
 
+  ngOnInit() {
+    if (!this.inputControl) {
+      this.inputControl = new FormControl();
+    }
+  }
+
   get hasError() {
     return this.inputControl
-      ? this.inputControl.invalid &&
-          (this.inputControl.touched || this.inputControl.dirty)
+      ? this.inputControl.invalid && this.inputControl.dirty
       : false;
   }
 

@@ -5,11 +5,11 @@
   </label>
 
   <input
-    class="w-full bg-transparent rounded-[8px] pl-8 outline-none mt-1 border-secondary-300 placeholder:text-secondary-100 text-secondary-100 h-[40px] gap-[16px] py-[10px] px-[14px] border [&:not([aria-invalid='false'])]:border-[#d50000] aria-[invalid=true]:border-2"
+    class="w-full bg-transparent rounded-[8px] pl-8 outline-none mt-1 border-black placeholder:text-black text-black h-[40px] gap-[16px] py-[10px] px-[14px] border [&:not([aria-invalid='false'])]:border-[#d50000] aria-[invalid=true]:border-2"
     [type]="inputType"
     [placeholder]="placeholder"
     [formControl]="inputControl"
-    [attr.aria.invalid]="hasError"
+    [attr.aria-invalid]="hasError"
   />
 
   <div class="relative">
