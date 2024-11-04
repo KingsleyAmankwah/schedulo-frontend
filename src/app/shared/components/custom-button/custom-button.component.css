@@ -1,0 +1,9 @@
+img {
+  height: 1em; /* Make image height consistent with text */
+  width: auto;
+}
+
+.material-icons {
+  font-size: 1.25rem; /* Adjust icon size */
+  vertical-align: middle;
+}

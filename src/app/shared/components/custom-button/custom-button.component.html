@@ -1,0 +1,17 @@
+<button
+  class="h-12 px-4 py-2 inline-flex items-center rounded-md disabled:opacity-50 disabled:cursor-default bg-[#09080D] text-white"
+  [class.primary]="buttonColor == 'primary'"
+  [class.secondary]="buttonColor == 'secondary'"
+  [type]="buttonType"
+  [disabled]="disabled"
+>
+  <ng-container *ngIf="iconName">
+    <span class="material-icons mr-2">{{ iconName }}</span>
+  </ng-container>
+
+  <ng-container *ngIf="imgSrc">
+    <img [src]="imgSrc" alt="Button Icon" class="mr-2 w-5 h-5" />
+  </ng-container>
+
+  {{ text }}
+</button>
