@@ -10,11 +10,35 @@
     class="h-16 w-auto"
   />
 
-  <div>
+  <div class="inline-flex gap-4">
     <app-custom-button
       [iconName]="'open_in_new'"
       [buttonType]="'button'"
       [text]="'Connect to Calender'"
     />
+
+    <app-custom-button
+      [iconName]="'login'"
+      [buttonType]="'button'"
+      [text]="'Login'"
+      (buttonClick)="triggerLoginModal()"
+    />
+
+    <app-custom-button
+      [iconName]="'person'"
+      [buttonType]="'button'"
+      [text]="'Get started'"
+      (buttonClick)="triggerRegisterModal()"
+    />
+
+    <div class="hidden md:flex items-center gap-2 cursor-pointer">
+      <img
+        [src]="'/assets/icons/auth-user-icon.svg'"
+        alt="avatar"
+        class="lg:block hidden w-5 h-5 rounded-full"
+      />
+
+      <p class="name">John Doe</p>
+    </div>
   </div>
 </nav>
