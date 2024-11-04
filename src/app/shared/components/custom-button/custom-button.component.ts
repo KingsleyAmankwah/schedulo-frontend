@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-custom-button',
@@ -15,4 +15,11 @@ export class CustomButtonComponent {
   @Input() disabled = false;
   @Input() imgSrc?: string;
   @Input() iconName?: string;
+  @Output() buttonClick = new EventEmitter();
+
+  public onButtonClick() {
+    if (!this.disabled) {
+      this.buttonClick.emit();
+    }
+  }
 }
