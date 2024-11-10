@@ -6,7 +6,7 @@
   *ngIf="authMode"
   class="w-[40%] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col h-[80vh] justify-center items-center rounded-lg z-50 bg-white"
 >
-  <div>
+  <div class="w-[65%]">
     <button
       (click)="triggerModalClose()"
       type="button"
@@ -48,26 +48,37 @@
     @if (authMode === 'login') {
 
     <ng-container>
-      <form [formGroup]="loginForm">
+      <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
         @for (input of LoginInputFields; track $index) {
         <app-custom-input
           [inputType]="input.type"
           [placeholder]="input.placeholder"
-          [inputControl]="formControlName(input.control)"
+          [inputControl]="loginFormInputControlName(input.control)"
           [label]="input.label"
           [required]="true"
           [errorMessage]="input.errorMessage"
         >
           <div left-icon>
-            <img [src]="input.icon" alt="" />
+            <img [src]="input.icon" alt="Icon name" />
           </div>
         </app-custom-input>
         }
 
-        <app-custom-button [buttonType]="'submit'" [text]="'Login'" />
+        <div class="mt-4">
+          <app-custom-button
+            [buttonType]="'submit'"
+            [text]="isLoading ? 'Loading...' : 'Login'"
+            [disabled]="loginForm.invalid || isLoading"
+          />
+        </div>
       </form>
 
-      <p class="text-end cursor-pointer hover:underline pt-1">Lost Password?</p>
+      <p
+        class="text-end cursor-pointer hover:underline pt-1"
+        (click)="switchMode('forgotPassword')"
+      >
+        Lost Password?
+      </p>
       <p class="text-center py-2">
         Don't have an account?
         <button class="text-primary-100 hover:underline" (click)="switchMode()">
@@ -79,12 +90,12 @@
     }@else if (authMode === 'register'){
 
     <ng-container>
-      <form [formGroup]="registerForm">
+      <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
         @for (input of RegisterInputFields; track $index) {
         <app-custom-input
           [inputType]="input.type"
           [placeholder]="input.placeholder"
-          [inputControl]="inputControlName(input.control)"
+          [inputControl]="registerFormInputControlName(input.control)"
           [label]="input.label"
           [required]="true"
           [errorMessage]="input.errorMessage"
@@ -95,7 +106,13 @@
         </app-custom-input>
         }
 
-        <app-custom-button [buttonType]="'submit'" [text]="'Sign up'" />
+        <div class="mt-4">
+          <app-custom-button
+            [buttonType]="'submit'"
+            [text]="isLoading ? 'Loading...' : 'Sign up'"
+            [disabled]="registerForm.invalid || isLoading"
+          />
+        </div>
       </form>
 
       <p class="text-center pt-2">
@@ -106,8 +123,45 @@
       </p>
     </ng-container>
 
-    }@else {
+    }@else if (authMode == 'forgotPassword') {
+    <ng-container>
+      <form
+        [formGroup]="forgotPasswordForm"
+        (ngSubmit)="sendResetPasswordLink()"
+        class="fixed inset-0 flex flex-col items-center justify-center bg-gray-50 w-full"
+      >
+        <h2 class="text-2xl font-bold text-black mb-2">Forgot Password?</h2>
+        <p class="text-gray-600 mb-4">
+          Enter your email to receive a password reset link.
+        </p>
 
+        <div class="p-8 rounded-lg shadow-sm max-w-md w-full">
+          <div class="text-center">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              formControlName="email"
+              class="w-full mb-4 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
+              required
+            />
+            <button
+              [disabled]="forgotPasswordForm.invalid || isLoading"
+              class="w-full bg-black text-white py-3 px-6 rounded-md transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Send Reset Link
+            </button>
+
+            <p
+              class="text-start cursor-pointer hover:text-primary-100 mt-3"
+              (click)="switchMode()"
+            >
+              Proceed to login
+            </p>
+          </div>
+        </div>
+      </form>
+    </ng-container>
+    } @else {
     <ng-container> No Content here </ng-container>
     }
 
@@ -119,6 +173,7 @@
 
     <div class="space-y-2">
       <button
+        (click)="googleLogin()"
         class="flex w-full items-center justify-center bg-white border border-gray-300 rounded-lg p-2 hover:bg-gray-100"
       >
         <img
@@ -131,6 +186,7 @@
 
       <button
         class="flex w-full items-center justify-center bg-white border border-gray-300 rounded-lg p-2 hover:bg-gray-100"
+        (click)="githubLogin()"
       >
         <img
           src="/assets/github-logo.svg"
