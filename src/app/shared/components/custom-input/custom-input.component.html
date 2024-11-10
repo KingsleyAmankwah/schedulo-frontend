@@ -1,11 +1,11 @@
-<div class="relative my-2 gap-[16px]">
+<div class="relative my-3 gap-[16px]">
   <label [for]="label" class="text-secondary-200"
     >{{ label }}
     <span *ngIf="required" class="text-red-500">*</span>
   </label>
 
   <input
-    class="w-full bg-transparent rounded-[8px] pl-8 outline-none mt-1 border-black placeholder:text-black text-black h-[40px] gap-[16px] py-[10px] px-[14px] border [&:not([aria-invalid='false'])]:border-[#d50000] aria-[invalid=true]:border-2"
+    class="w-full bg-transparent rounded-[8px] pl-8 outline-none mt-1 border-black focus:border-2 placeholder:text-black text-black h-[40px] gap-[16px] py-[10px] px-[14px] border [&:not([aria-invalid='false'])]:border-[#d50000] aria-[invalid=true]:border-2"
     [type]="inputType"
     [placeholder]="placeholder"
     [formControl]="inputControl"
