@@ -8,14 +8,10 @@ export const routes: Routes = [
   },
 
   {
-    path: 'admin',
-    loadChildren: () =>
-      import('./features/admin/admin.routes').then((r) => r.adminRoutes),
-  },
-
-  {
-    path: 'client',
-    loadChildren: () =>
-      import('./features/client/client.routes').then((r) => r.clientRoutes),
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./features/dashboard/dashboard.component').then(
+        (c) => c.DashboardComponent
+      ),
   },
 ];
