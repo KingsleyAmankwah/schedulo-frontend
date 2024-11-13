@@ -63,7 +63,7 @@ export class AuthComponent {
       [
         Validators.required,
         Validators.pattern(
-          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&_]).{8,}$/
+          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?.&_]).{8,}$/
         ),
       ],
     ],
@@ -96,7 +96,7 @@ export class AuthComponent {
 
       this.authService.register(userData);
       this.isLoading = false;
-      this.triggerModalClose();
+      // this.triggerModalClose();
     }
   }
 
@@ -134,6 +134,12 @@ export class AuthComponent {
     localStorage.setItem('oauthProvider', 'github');
     window.location.href =
       'http://localhost:8080/api/v1/oauth2/authorization/github';
+  }
+
+  protected microsoftLogin() {
+    localStorage.setItem('oauthProvider', 'microsoft');
+    window.location.href =
+      'http://localhost:8080/api/v1/oauth2/authorization/microsoft';
   }
 
   protected LoginInputFields = [
