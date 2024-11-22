@@ -1,0 +1,9 @@
+<aside class="h-screen shadow-xl w-[244px] px-8 pt-4 fixed">
+  <div class="flex flex-col space-y-4">
+    @for (nav of sidebarNavItems; track $index) {
+    <a [routerLink]="nav.location">
+      {{ nav.name }}
+    </a>
+    }
+  </div>
+</aside>
