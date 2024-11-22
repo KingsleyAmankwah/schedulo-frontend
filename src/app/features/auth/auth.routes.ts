@@ -32,4 +32,12 @@ export const authRoutes: Routes = [
         (c) => c.OauthCallbackComponent
       ),
   },
+
+  {
+    path: 'onboarding',
+    loadComponent: () =>
+      import('./onboarding/onboarding.component').then(
+        (c) => c.OnboardingComponent
+      ),
+  },
 ];
