@@ -1,0 +1,103 @@
+<div class="border p-4">
+  <h1 class="font-semibold text-2xl">Availability</h1>
+  <div class="py-4 flex justify-between">
+    <div>
+      <p>In this section you can manage your availability!</p>
+    </div>
+
+    <div>
+      <h1>Pick the Start time</h1>
+    </div>
+
+    <div>
+      <h1>Pick the end time</h1>
+    </div>
+  </div>
+
+  <form #availabilityForm="ngForm" (ngSubmit)="submitAvailability()">
+    <div class="flex flex-col space-y-4">
+      @for (item of availability; track item; let i = $index) {
+
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 items-center gap-4"
+      >
+        <div>
+          <label class="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              [(ngModel)]="availability[i].enabled"
+              [name]="'enabled' + i"
+              class="sr-only peer"
+              checked
+            />
+            <div
+              class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black"
+            ></div>
+            <span class="ms-3 text-sm font-normal">{{
+              availability[i].dayOfWeek
+            }}</span>
+          </label>
+        </div>
+
+        <div>
+          <select
+            [(ngModel)]="availability[i].startTime"
+            [name]="'startTime' + i"
+            id="startTime"
+            class="text-black font-semibold text-sm rounded-lg block w-full p-2.5 bg-white border-gray-600 border h-1/2"
+          >
+            @for (item of times; track $index) {
+
+            <option value="{{ item.time }}">{{ item.time }}</option>
+            }
+          </select>
+        </div>
+
+        <div>
+          <select
+            [(ngModel)]="availability[i].endTime"
+            [name]="'endTime' + i"
+            class="text-black font-semibold text-sm rounded-lg block w-full p-2.5 bg-white border-gray-600 border h-1/2"
+          >
+            @for (item of times; track $index) {
+
+            <option value="{{ item.time }}">{{ item.time }}</option>
+            }
+          </select>
+        </div>
+
+        @if (item.error) {
+
+        <div class="col-span-full text-red-500 text-sm">
+          {{ item.error }}
+        </div>
+
+        }
+      </div>
+      }
+    </div>
+
+    <div class="w-[25%] my-4">
+      <app-custom-button [buttonType]="'submit'" [text]="'Save Changes'" />
+    </div>
+  </form>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div
+    *ngFor="let item of availability"
+    class="border rounded-lg p-4 shadow-md"
+  >
+    <h3 class="font-bold text-lg">{{ item.dayOfWeek }}</h3>
+    <p class="text-sm text-gray-600">
+      <span *ngIf="item.enabled">
+        {{ item.startTime }} - {{ item.endTime }}
+      </span>
+      <span *ngIf="!item.enabled">Not Available</span>
+    </p>
+    <div class="mt-2">
+      <button class="text-blue-500">Edit</button>
+      <button class="text-red-500 ml-2">Delete</button>
+    </div>
+  </div>
+</div>
