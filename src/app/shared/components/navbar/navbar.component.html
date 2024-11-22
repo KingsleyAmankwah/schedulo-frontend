@@ -16,7 +16,8 @@
     <app-custom-button
       [iconName]="'open_in_new'"
       [buttonType]="'button'"
-      [text]="'Connect to Calender'"
+      [text]="'Share Profile'"
+      (buttonClick)="triggerShareProfileModal()"
     />
 
     <div>
@@ -26,7 +27,7 @@
         class="lg:block hidden w-5 h-5 rounded-full"
       />
 
-      <p class="name">John Doe</p>
+      <p class="name">{{ userDetails?.name }}</p>
     </div>
     }@else {
 
