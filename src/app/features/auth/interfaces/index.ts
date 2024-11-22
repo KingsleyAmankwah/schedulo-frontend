@@ -25,5 +25,9 @@ export interface LoginData {
 }
 
 export interface UserDetails {
-  userId: string;
+  sub: string;
+  name: string;
+  user_id: string;
+  role: string;
+  profile: string;
 }
