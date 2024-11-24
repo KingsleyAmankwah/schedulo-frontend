@@ -2,10 +2,16 @@
   *ngIf="showNavbar"
   (openLoginModal)="onOpenLoginModal()"
   (openRegisterModal)="onOpenRegisterModal()"
+  (openShareProfileModal)="onOpenShareProfileModal()"
 />
 <app-auth
   *ngIf="isAuthModalOpen"
   [authMode]="authMode"
   (closeModal)="onCloseAAuthModal()"
+/>
+
+<app-share-profile-modal
+  (closeModal)="closeShareProfileModal()"
+  [showSharePopup]="shareProfileModal"
 />
 <router-outlet />
