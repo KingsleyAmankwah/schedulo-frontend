@@ -1,7 +1,9 @@
 <div class="relative">
-  <app-sidebar />
+  <app-sidebar (openLogoutModal)="triggerLogoutModal()" />
 
-  <div class="pl-[280px] pt-10 pr-40">
+  <div class="pl-[280px] pt-10 lg:pr-40 pr-10 bg-red">
     <router-outlet></router-outlet>
   </div>
+
+  <app-logout-modal [showModal]="showLogoutModal" />
 </div>
