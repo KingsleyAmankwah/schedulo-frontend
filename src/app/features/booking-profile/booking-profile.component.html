@@ -1,0 +1,217 @@
+<div
+  class="fixed top-0 z-50 left-0 bg-[rgba(0,0,0,0.5)] flex justify-center items-center w-[100vw] h-[100vh]"
+>
+  <div
+    class="bg-white w-full max-w-4xl mx-auto p-4 relative max-h-[90vh] overflow-y-auto"
+  >
+    <h2 class="text-xl font-semibold flex items-center gap-2 py-4">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      Book a Session
+    </h2>
+    <button
+      (click)="onCancel()"
+      type="button"
+      class="bg-black text-white rounded-lg w-8 h-8 ms-auto inline-flex justify-center items-center text-xs absolute top-[2%] right-[2%]"
+    >
+      <svg
+        class="w-3 h-3"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 14 14"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+        />
+      </svg>
+    </button>
+
+    <form class="space-y-6" [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+      <!-- Two Column Layout -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Left Column - Calendar -->
+        <div class="space-y-6">
+          <!-- Calendar Header -->
+          <div class="bg-white rounded-lg shadow-sm border">
+            <div class="flex justify-between items-center p-4 border-b">
+              <button
+                type="button"
+                (click)="previousMonth()"
+                class="p-2 hover:bg-gray-100 rounded-full"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <h3 class="text-lg font-semibold">
+                {{ currentDate | date : "MMMM yyyy" }}
+              </h3>
+              <button
+                type="button"
+                (click)="nextMonth()"
+                class="p-2 hover:bg-gray-100 rounded-full"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="grid grid-cols-7 gap-1 p-4">
+              <div
+                *ngFor="let day of weekDays"
+                class="text-center font-semibold text-sm py-2"
+              >
+                {{ day }}
+              </div>
+
+              <button
+                type="button"
+                *ngFor="let date of calendarDates"
+                [disabled]="!isValidDate(date)"
+                [title]="
+                  !isValidDate(date) ? 'Past dates cannot be selected' : ''
+                "
+                (click)="selectDate(date)"
+                [ngClass]="[
+                  'h-10 w-10 text-sm text-center rounded-full transition-colors',
+                  !isValidDate(date)
+                    ? 'text-gray-300 cursor-not-allowed opacity-50'
+                    : 'text-gray-700 cursor-pointer',
+                  date.isSelected
+                    ? 'bg-primary-100 text-white hover:bg-primary-200'
+                    : '',
+                  isValidDate(date) && !date.isSelected
+                    ? 'hover:bg-blue-50'
+                    : '',
+                  date.isToday ? 'border border-primary-100' : '',
+                  bookingForm.get('date')?.value === getSelectedDate()
+                    ? 'ring-primary-100'
+                    : ''
+                ]"
+              >
+                {{ date.date }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Time Selection -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Start Time
+              </label>
+              <input
+                formControlName="startTime"
+                type="time"
+                class="w-full rounded-md border border-gray-300 p-2"
+                required
+              />
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                End Time
+              </label>
+              <input
+                formControlName="endTime"
+                type="time"
+                class="w-full rounded-md border border-gray-300 p-2"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column - Personal Info & Description -->
+        <div class="space-y-6">
+          <!-- Personal Information -->
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <input
+                formControlName="inviteeName"
+                type="text"
+                class="w-full rounded-md border border-gray-300 p-2"
+                placeholder="eg. Jane Doe"
+                required
+              />
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                formControlName="inviteeEmail"
+                type="email"
+                class="w-full rounded-md border border-gray-300 p-2"
+                placeholder="eg. janedoe@gmail.com"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">
+              Session Description
+            </label>
+            <textarea
+              formControlName="summary"
+              rows="5"
+              placeholder="Please provide a brief description of what you'd like to discuss in this session..."
+              class="w-full rounded-md border border-gray-300 p-2 resize-none focus:border-blue-500 focus:ring-blue-500"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end mt-4 space-x-2">
+        <app-custom-button
+          [iconName]="'event_repeat'"
+          [text]="'Book a Session'"
+          [buttonType]="'submit'"
+        />
+      </div>
+    </form>
+  </div>
+</div>
