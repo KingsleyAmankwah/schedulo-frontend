@@ -5,6 +5,7 @@ import { AuthComponent } from './features/auth/auth.component';
 import { CommonModule } from '@angular/common';
 import { SharedService } from './shared/services/shared.service';
 import { ShareProfileModalComponent } from './shared/components/share-profile-modal/share-profile-modal.component';
+import { ToastComponent } from "./shared/components/toast/toast.component";
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,8 @@ import { ShareProfileModalComponent } from './shared/components/share-profile-mo
     NavbarComponent,
     AuthComponent,
     ShareProfileModalComponent,
-  ],
+    ToastComponent
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -26,7 +28,7 @@ export class AppComponent {
   protected shareProfileModal = false;
 
   constructor(
-    private sharedService: SharedService,
+    public sharedService: SharedService,
     private route: ActivatedRoute
   ) {
     effect(() => {
