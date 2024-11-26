@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -10,6 +10,12 @@ import { RouterLink } from '@angular/router';
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
+  @Output() openLogoutModal = new EventEmitter();
+
+  public triggerLogoutModal() {
+    this.openLogoutModal.emit();
+  }
+
   protected sidebarNavItems = [
     {
       name: 'Availability',
@@ -22,8 +28,8 @@ export class SidebarComponent {
     },
 
     {
-      name: 'Event',
-      location: 'event',
+      name: 'Archives',
+      location: 'archives',
     },
 
     {
@@ -33,7 +39,6 @@ export class SidebarComponent {
 
     {
       name: 'Logout',
-      location: 'logout',
     },
   ];
 }
