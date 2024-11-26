@@ -1,7 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CustomButtonComponent } from '../../../../shared/components/custom-button/custom-button.component';
+import { ClockTimePickerComponent } from '../../../../shared/components/clock-time-picker/clock-time-picker.component';
+import { MeetingRescheduleRequest } from '../../types';
+import { MeetingService } from '../../service/meeting.service';
 interface CalendarDate {
   date: number | null;
   isSelected: boolean;
@@ -12,24 +20,34 @@ interface CalendarDate {
 @Component({
   selector: 'app-reschedule-modal',
   standalone: true,
-  imports: [CommonModule, CustomButtonComponent],
+  imports: [
+    CommonModule,
+    CustomButtonComponent,
+    ReactiveFormsModule,
+    ClockTimePickerComponent,
+  ],
   templateUrl: './reschedule-modal.component.html',
   styleUrl: './reschedule-modal.component.css',
 })
 export class RescheduleModalComponent {
   @Input() showModal = false;
-  eventForm: FormGroup;
+  @Input() meetingId = '';
+  @Input() inviteeEmail = '';
+  @Input() inviteeName = '';
   weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   calendarDates: CalendarDate[] = [];
   currentDate: Date = new Date();
 
-  constructor(private fb: FormBuilder) {
-    this.eventForm = this.fb.group({
-      selectedDate: ['', Validators.required],
-      startTime: ['', Validators.required],
-      endTime: ['', Validators.required],
-    });
-  }
+  constructor(
+    private fb: FormBuilder,
+    private meetingService: MeetingService
+  ) {}
+
+  protected rescheduleForm = this.fb.group({
+    date: ['', Validators.required],
+    startTime: ['', Validators.required],
+    endTime: ['', Validators.required],
+  });
 
   ngOnInit() {
     this.generateCalendarDates();
@@ -122,20 +140,69 @@ export class RescheduleModalComponent {
       this.currentDate.getMonth(),
       date.date
     );
-    this.eventForm.patchValue({
-      selectedDate: selectedDate.toISOString().split('T')[0],
+
+    // Format the date as YYYY-MM-DD for the form
+    const formattedDate = selectedDate.toISOString().split('T')[0];
+
+    // Update the form control
+    this.rescheduleForm.patchValue({
+      date: formattedDate,
     });
+
+    // Optional: Log the selected date for debugging
+    console.log('Selected date:', formattedDate);
+  }
+
+  // Method to get the currently selected date (useful for validation or display)
+  getSelectedDate(): string | null {
+    return this.rescheduleForm.get('date')?.value || null;
+  }
+
+  isValidDate(date: CalendarDate): boolean {
+    if (!date.isCurrentMonth) return false;
+
+    // Create date objects for comparison
+    // Set hours, minutes, seconds, and milliseconds to 0 for accurate date comparison
+    const selectedDate = new Date(
+      this.currentDate.getFullYear(),
+      this.currentDate.getMonth(),
+      date.date!
+    );
+    selectedDate.setHours(0, 0, 0, 0);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return selectedDate >= today;
   }
 
   onSubmit() {
-    if (this.eventForm.valid) {
-      console.log('Form submitted:', this.eventForm.value);
+    if (this.rescheduleForm.valid) {
+      const formData = this.rescheduleForm.value;
+      const data: MeetingRescheduleRequest = {
+        meetingId: this.meetingId,
+        inviteeName: this.inviteeName,
+        inviteeEmail: this.inviteeEmail,
+        date: formData.date,
+        startTime: formData.startTime,
+        endTime: formData.endTime,
+      };
+
+      this.meetingService.rescheduleMeeting(this.meetingId, data).subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+
+        error: (error) => {
+          console.log(error);
+        },
+      });
+    } else {
+      console.log('Form is invalid');
     }
   }
 
   onCancel() {
-    // this.eventForm.reset();
-    // this.calendarDates.forEach((date) => (date.isSelected = false));
     this.showModal = !this.showModal;
   }
 }

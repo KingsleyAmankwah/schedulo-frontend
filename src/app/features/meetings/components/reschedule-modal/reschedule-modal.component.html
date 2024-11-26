@@ -43,7 +43,11 @@
       </svg>
     </button>
 
-    <form class="space-y-8">
+    <form
+      class="space-y-8"
+      [formGroup]="rescheduleForm"
+      (ngSubmit)="onSubmit()"
+    >
       <!-- Calendar Header -->
       <div class="bg-white rounded-lg shadow-sm border">
         <div class="flex justify-between items-center p-4 border-b">
@@ -98,22 +102,24 @@
           </div>
 
           <button
-            *ngFor="let date of calendarDates"
             type="button"
-            [disabled]="!date.date || !date.isCurrentMonth"
+            *ngFor="let date of calendarDates"
+            [disabled]="!isValidDate(date)"
+            [title]="!isValidDate(date) ? 'Past dates cannot be selected' : ''"
             (click)="selectDate(date)"
             [ngClass]="[
-              'h-10 text-sm rounded-full transition-colors',
-              !date.date || !date.isCurrentMonth
-                ? 'text-gray-300'
-                : 'text-gray-700',
+              'h-10 w-10 text-sm text-center rounded-full transition-colors',
+              !isValidDate(date)
+                ? 'text-gray-300 cursor-not-allowed opacity-50'
+                : 'text-gray-700 cursor-pointer',
               date.isSelected
                 ? 'bg-primary-100 text-white hover:bg-primary-200'
                 : '',
-              date.isToday && !date.isSelected
-                ? 'border-2 border-primary-200'
-                : '',
-              date.isCurrentMonth && !date.isSelected ? 'hover:bg-blue-50' : ''
+              isValidDate(date) && !date.isSelected ? 'hover:bg-blue-50' : '',
+              date.isToday ? 'border border-primary-100' : '',
+              rescheduleForm.get('date')?.value === getSelectedDate()
+                ? 'ring-primary-100'
+                : ''
             ]"
           >
             {{ date.date }}
@@ -122,7 +128,7 @@
       </div>
 
       <div class="grid grid-cols-2 gap-4">
-        <div class="space-y-2">
+        <!-- <div class="space-y-2">
           <label class="block text-sm font-medium text-gray-700">
             Start Time
           </label>
@@ -141,7 +147,13 @@
             class="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
             required
           />
-        </div>
+        </div> -->
+
+        <app-clock-time-picker
+          formControlName="startTime"
+          [label]="'Start time'"
+        />
+        <app-clock-time-picker formControlName="endTime" [label]="'End time'" />
       </div>
 
       <!-- Action Buttons -->
@@ -157,8 +169,7 @@
         <app-custom-button
           [iconName]="'event_repeat'"
           [text]="'Reschedule'"
-          [buttonType]="'button'"
-          (buttonClick)="onSubmit()"
+          [buttonType]="'submit'"
         />
       </div>
     </form>
