@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from '../../../shared/services/shared.service';
 import { interval, Subscription } from 'rxjs';
+import { VerificationResponse } from '../interfaces';
 
 @Component({
   selector: 'app-activate-account',
@@ -26,10 +27,19 @@ export class ActivateAccountComponent {
   ngOnInit() {
     const token = this.route.snapshot.queryParamMap.get('token');
     if (token) {
-      this.authService.verifyAccount(token);
+      this.authService.verifyAccount(token).subscribe({
+        next: (response: VerificationResponse) => {
+          this.sharedService.successToastr(response.message);
+        },
+
+        error: (error) => {
+          this.sharedService.errorToastr(error.error.error);
+          this.router.navigate(['/auth/request-token']);
+        },
+      });
     } else {
-      this.router.navigate(['/']);
-      console.log('No token available');
+      this.router.navigate(['/auth/request-token']);
+      this.sharedService.errorToastr('No token found');
     }
   }
 
