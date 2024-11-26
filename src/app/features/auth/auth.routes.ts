@@ -40,4 +40,12 @@ export const authRoutes: Routes = [
         (c) => c.OnboardingComponent
       ),
   },
+
+  {
+    path: 'request-token',
+    loadComponent: () =>
+      import('./reset-activation-token/reset-activation-token.component').then(
+        (c) => c.ResetActivationTokenComponent
+      ),
+  },
 ];
