@@ -12,7 +12,7 @@ import { interval, Subscription } from 'rxjs';
   styleUrl: './activate-account.component.css',
 })
 export class ActivateAccountComponent {
-  countdownSeconds = 10;
+  countdownSeconds = 20;
   countdownSubscription!: Subscription;
   constructor(
     private authService: AuthService,
