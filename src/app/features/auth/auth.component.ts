@@ -9,7 +9,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from './services/auth.service';
-import { LoginData, RegisterData } from './interfaces';
+import { LoginData, RegisterData, VerificationResponse } from './interfaces';
+import { SharedService } from '../../shared/services/shared.service';
 
 @Component({
   selector: 'app-auth',
@@ -28,7 +29,11 @@ export class AuthComponent {
   @Output() closeModal = new EventEmitter();
   protected isLoading = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private sharedService: SharedService
+  ) {}
 
   public switchMode(newMode?: 'login' | 'register' | 'forgotPassword') {
     if (newMode) {
@@ -94,9 +99,16 @@ export class AuthComponent {
         password: this.registerForm.value.password!,
       };
 
-      this.authService.register(userData);
-      this.isLoading = false;
-      // this.triggerModalClose();
+      this.authService.register(userData).subscribe({
+        next: (response: VerificationResponse) => {
+          this.sharedService.successToastr(response.message);
+          this.registerForm.reset();
+          this.triggerModalClose();
+        },
+        error: (error) => {
+          this.sharedService.errorToastr(error.error.message);
+        },
+      });
     }
   }
 
