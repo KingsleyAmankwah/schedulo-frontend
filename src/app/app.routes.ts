@@ -10,6 +10,14 @@ export const routes: Routes = [
   },
 
   {
+    path: 'profile/:userId',
+    loadComponent: () =>
+      import('./features/booking-profile/booking-profile.component').then(
+        (c) => c.BookingProfileComponent
+      ),
+  },
+
+  {
     path: 'auth',
     loadChildren: () =>
       import('./features/auth/auth.routes').then((r) => r.authRoutes),
@@ -45,10 +53,10 @@ export const routes: Routes = [
       },
 
       {
-        path: 'event',
+        path: 'archives',
         loadComponent: () =>
-          import('./features/events/events.component').then(
-            (c) => c.EventsComponent
+          import('./features/archives/archives.component').then(
+            (c) => c.ArchivesComponent
           ),
       },
 
