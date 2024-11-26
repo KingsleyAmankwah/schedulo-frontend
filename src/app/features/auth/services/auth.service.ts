@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import {
   AuthResponse,
@@ -7,7 +7,7 @@ import {
   UserDetails,
   VerificationResponse,
 } from '../interfaces';
-import { auth } from '../../../shared/constants/apiEndpoints';
+import { auth, events } from '../../../shared/constants/apiEndpoints';
 import { cookie } from '../../../shared/utils';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
@@ -86,13 +86,15 @@ export class AuthService {
           this.setTokens(accessToken, refreshToken);
           this.authStatus.set(true);
           this.setUserDetailsFromToken(accessToken);
-          console.log('Login successful:', message);
+          this.router.navigate(['/dashboard']);
+          console.log(message);
         },
         error: (error) => {
           console.error('Login failed:', error);
         },
       });
   }
+
   private isTokenExpired(token: string): boolean {
     try {
       const decodedToken = jwtDecode(token);
