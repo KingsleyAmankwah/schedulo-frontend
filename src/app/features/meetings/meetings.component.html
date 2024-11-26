@@ -125,6 +125,7 @@
   [inviteeEmail]="inviteeEmail"
   [inviteeName]="inviteeName"
   [showModal]="isRescheduleModalOpen"
+  (onMeetingReschedule)="onMeetingRescheduled()"
 />
 } @if (isDeclinedModalOpen) {
 <app-decline-modal

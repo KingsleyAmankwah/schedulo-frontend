@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { MeetingService } from '../../service/meeting.service';
 import { MeetingStatus } from '../../types';
 import { response } from 'express';
+import { SharedService } from '../../../../shared/services/shared.service';
+import { BookingResponse } from '../../../booking-profile/types';
 
 @Component({
   selector: 'app-decline-modal',
@@ -18,6 +20,7 @@ export class DeclineModalComponent {
   @Output() meetingCancelled = new EventEmitter<string>();
 
   private meetingService = inject(MeetingService);
+  private sharedService = inject(SharedService);
   private meetStats = MeetingStatus.Cancelled;
 
   onClose() {
@@ -25,20 +28,22 @@ export class DeclineModalComponent {
   }
   protected declineMeeting() {
     if (!this.meetingId) {
-      console.error('No meeting ID provided');
+      this.sharedService.infoToastr('No meeting id found');
       return;
     }
     this.meetingService
       .cancelMeeting(this.meetingId, this.meetStats)
       .subscribe({
-        next: (response) => {
-          console.log(response);
+        next: (response: BookingResponse) => {
+          // console.log(response);
+          this.sharedService.successToastr(response.message);
           this.meetingCancelled.emit(this.meetingId);
-          // this.onClose();
+          this.onClose();
         },
 
         error: (error) => {
-          console.log(error);
+          // console.log(error);
+          this.sharedService.errorToastr(error.error.error);
         },
       });
   }

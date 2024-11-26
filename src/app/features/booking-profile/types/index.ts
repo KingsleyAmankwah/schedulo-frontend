@@ -16,3 +16,7 @@ export type RescheduleRequest = {
   startTime: string | null | undefined;
   endTime: string | null | undefined;
 };
+
+export type BookingResponse = {
+  message: string;
+};

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +10,8 @@ import { CustomButtonComponent } from '../../../../shared/components/custom-butt
 import { ClockTimePickerComponent } from '../../../../shared/components/clock-time-picker/clock-time-picker.component';
 import { MeetingRescheduleRequest } from '../../types';
 import { MeetingService } from '../../service/meeting.service';
+import { SharedService } from '../../../../shared/services/shared.service';
+import { BookingResponse } from '../../../booking-profile/types';
 interface CalendarDate {
   date: number | null;
   isSelected: boolean;
@@ -34,13 +36,15 @@ export class RescheduleModalComponent {
   @Input() meetingId = '';
   @Input() inviteeEmail = '';
   @Input() inviteeName = '';
+  @Output() onMeetingReschedule = new EventEmitter();
   weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   calendarDates: CalendarDate[] = [];
   currentDate: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
-    private meetingService: MeetingService
+    private meetingService: MeetingService,
+    private sharedService: SharedService
   ) {}
 
   protected rescheduleForm = this.fb.group({
@@ -148,9 +152,6 @@ export class RescheduleModalComponent {
     this.rescheduleForm.patchValue({
       date: formattedDate,
     });
-
-    // Optional: Log the selected date for debugging
-    console.log('Selected date:', formattedDate);
   }
 
   // Method to get the currently selected date (useful for validation or display)
@@ -189,12 +190,14 @@ export class RescheduleModalComponent {
       };
 
       this.meetingService.rescheduleMeeting(this.meetingId, data).subscribe({
-        next: (response) => {
-          console.log(response);
+        next: (response: BookingResponse) => {
+          this.sharedService.successToastr(response.message);
+          this.showModal = !this.showModal;
+          this.onMeetingReschedule.emit();
         },
 
         error: (error) => {
-          console.log(error);
+          this.sharedService.errorToastr(error.error.error);
         },
       });
     } else {

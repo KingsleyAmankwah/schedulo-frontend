@@ -76,6 +76,9 @@ export class MeetingsComponent {
   onDeclineMeetingSuccess() {
     this.fetchUserMeetings();
   }
+  onMeetingRescheduled() {
+    this.fetchUserMeetings();
+  }
 
   protected toggleScheduleModal() {
     this.isRescheduleModalOpen = !this.isRescheduleModalOpen;

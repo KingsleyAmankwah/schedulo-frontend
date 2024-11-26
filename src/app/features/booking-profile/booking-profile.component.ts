@@ -4,8 +4,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BookingService } from './services/booking.service';
 import { ActivatedRoute } from '@angular/router';
-import { BookingRequest } from './types';
+import { BookingRequest, BookingResponse } from './types';
 import { ClockTimePickerComponent } from '../../shared/components/clock-time-picker/clock-time-picker.component';
+import { SharedService } from '../../shared/services/shared.service';
 interface CalendarDate {
   date: number | null;
   isSelected: boolean;
@@ -34,7 +35,8 @@ export class BookingProfileComponent {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private sharedService: SharedService
   ) {}
 
   protected bookingForm = this.fb.group({
@@ -48,7 +50,6 @@ export class BookingProfileComponent {
 
   ngOnInit() {
     this.hostSlug = this.route.snapshot.paramMap.get('userId');
-    console.log(this.hostSlug);
     this.generateCalendarDates();
   }
 
@@ -147,9 +148,6 @@ export class BookingProfileComponent {
     this.bookingForm.patchValue({
       date: formattedDate,
     });
-
-    // Optional: Log the selected date for debugging
-    console.log('Selected date:', formattedDate);
   }
 
   // Method to get the currently selected date (useful for validation or display)
@@ -190,16 +188,18 @@ export class BookingProfileComponent {
       };
 
       this.bookingService.scheduleMeeting(data).subscribe({
-        next: (response) => {
-          console.log(response);
+        next: (response: BookingResponse) => {
+          this.sharedService.successToastr(response.message);
+          this.bookingForm.reset();
         },
-
         error: (error) => {
-          console.log(error);
+          this.sharedService.errorToastr(error.error.error);
         },
       });
     } else {
-      console.log('Form is invalid');
+      this.sharedService.warningToastr(
+        'Please all field are required to be filled'
+      );
     }
   }
 
