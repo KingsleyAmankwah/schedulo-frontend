@@ -16,6 +16,7 @@ export class NavbarComponent {
   protected userDetails: UserDetails | null = null;
   @Output() openLoginModal = new EventEmitter();
   @Output() openRegisterModal = new EventEmitter();
+  @Output() openShareProfileModal = new EventEmitter();
 
   constructor(private authService: AuthService) {
     effect(() => {
@@ -30,5 +31,9 @@ export class NavbarComponent {
 
   public triggerRegisterModal() {
     this.openRegisterModal.emit();
+  }
+
+  public triggerShareProfileModal() {
+    this.openShareProfileModal.emit();
   }
 }
