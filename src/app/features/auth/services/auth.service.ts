@@ -1,8 +1,10 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import {
   AuthResponse,
+  ErrorResponse,
   LoginData,
+  ResetPasswordResponse,
   RegisterData,
   UserDetails,
   VerificationResponse,
@@ -12,11 +14,13 @@ import { cookie } from '../../../shared/utils';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { map, Subject, take, tap } from 'rxjs';
+import { SharedService } from '../../../shared/services/shared.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private sharedService = inject(SharedService);
   public authStatus: WritableSignal<boolean> = signal(false);
   private userDetails = signal<UserDetails | null>(null);
   private refreshTokenInProgress: WritableSignal<boolean> = signal(false);
@@ -53,28 +57,15 @@ export class AuthService {
   }
 
   public register(userData: RegisterData) {
-    return this.http
-      .post<VerificationResponse>(`${auth}/register`, userData)
-      .subscribe({
-        next: (response) => {
-          console.log('Registration Successful:', response);
-        },
-        error: (error) => {
-          console.error('Registration failed:', error);
-        },
-      });
+    return this.http.post<VerificationResponse>(`${auth}/register`, userData);
   }
 
   public verifyAccount(token: string) {
-    return this.http.get<string>(`${auth}/verify?token=${token}`).subscribe({
-      next: (message) => {
-        console.log('Verification successful:', message);
-      },
+    return this.http.get<VerificationResponse>(`${auth}/verify?token=${token}`);
+  }
 
-      error: (error) => {
-        console.error('Verification failed:', error);
-      },
-    });
+  public requestNewVerificationToken(email: string) {
+    return this.http.post<VerificationResponse>(`${auth}/request-token`, email);
   }
 
   public login(credentials: LoginData) {
@@ -87,10 +78,10 @@ export class AuthService {
           this.authStatus.set(true);
           this.setUserDetailsFromToken(accessToken);
           this.router.navigate(['/dashboard']);
-          console.log(message);
+          this.sharedService.successToastr(message);
         },
         error: (error) => {
-          console.error('Login failed:', error);
+          this.sharedService.errorToastr(error.error.message);
         },
       });
   }
@@ -121,7 +112,7 @@ export class AuthService {
     const refreshToken = cookie.get(this.refreshTokenKey);
     if (!refreshToken) {
       this.logout();
-      console.log('Refresh token not found');
+      this.sharedService.infoToastr('Refresh token not found');
       return this.refreshTokenSubject.asObservable();
     }
 
@@ -142,7 +133,7 @@ export class AuthService {
             this.refreshTokenInProgress.set(false);
             this.refreshTokenSubject.error(error);
             this.logout();
-            console.error(error);
+            this.sharedService.warningToastr(error);
           },
         }),
         map((response) => response.accessToken)
@@ -151,13 +142,13 @@ export class AuthService {
 
   public sendResetLink(email: string) {
     return this.http
-      .post<string>(`${auth}/request-password-reset`, { email })
+      .post<ResetPasswordResponse>(`${auth}/request-password-reset`, { email })
       .subscribe({
-        next: (response) => {
-          console.log(response);
+        next: (response: ResetPasswordResponse) => {
+          this.sharedService.successToastr(response.message);
         },
         error: (error) => {
-          console.error(error);
+          this.sharedService.errorToastr(error.error.error);
         },
       });
   }
@@ -165,39 +156,48 @@ export class AuthService {
   public verifyResetToken(token: string) {
     const params = new HttpParams().set('token', token);
     return this.http
-      .get<string>(`${auth}/verify-reset-token`, {
+      .get<ResetPasswordResponse>(`${auth}/verify-reset-token`, {
         params,
       })
       .subscribe({
-        next: (response) => {
-          console.log(response);
+        next: (response: ResetPasswordResponse) => {
+          this.sharedService.successToastr(response.message);
         },
 
         error: (error) => {
-          console.error(error);
+          this.sharedService.errorToastr(error.error.error);
         },
       });
   }
 
   public resetPassword(token: string, newPassword: string) {
     return this.http
-      .post<string>(`${auth}/reset-password?token=${token}`, { newPassword })
+      .post<ResetPasswordResponse>(`${auth}/reset-password?token=${token}`, {
+        newPassword,
+      })
       .subscribe({
-        next: (response) => {
-          console.log(response);
+        next: (response: ResetPasswordResponse) => {
+          this.sharedService.successToastr(response.message);
         },
         error: (error) => {
-          console.error(error);
+          this.sharedService.errorToastr(error.error.error);
         },
       });
   }
 
   public logout() {
-    cookie.remove(this.accessTokenKey);
-    cookie.remove(this.refreshTokenKey);
-    this.authStatus.set(false);
-    this.userDetails.set(null);
-    this.router.navigate(['']);
+    try {
+      cookie.remove(this.accessTokenKey);
+      cookie.remove(this.refreshTokenKey);
+      this.authStatus.set(false);
+      this.userDetails.set(null);
+
+      this.router.navigate(['/']).then(() => {
+        window.location.reload();
+      });
+    } catch (error) {
+      this.sharedService.warningToastr('Error during logout');
+    }
   }
 
   public isLoggedIn(): boolean {
