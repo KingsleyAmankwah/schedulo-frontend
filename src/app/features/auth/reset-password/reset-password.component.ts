@@ -8,8 +8,9 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { SharedService } from '../../../shared/services/shared.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -24,32 +25,23 @@ export class ResetPasswordComponent {
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private sharedService: SharedService,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.token = params['token'];
       if (!this.token) {
-        console.log('Invalid reset link');
+        this.sharedService.errorToastr('Invalid reset link');
         return;
       }
 
       this.verifyToken();
     });
 
-    this.resetPasswordForm.statusChanges.subscribe((status) => {
-      console.log('Form Status:', status); // Should show "VALID" when form is valid
-      console.log('Form Errors:', this.resetPasswordForm.errors);
-      console.log(
-        'Password Errors:',
-        this.resetPasswordForm.get('password')?.errors
-      );
-      console.log(
-        'Confirm Password Errors:',
-        this.resetPasswordForm.get('confirmPassword')?.errors
-      );
-    });
+    // this.resetPasswordForm.statusChanges.subscribe((status) => {});
   }
 
   resetPasswordForm = this.fb.group(
@@ -102,5 +94,13 @@ export class ResetPasswordComponent {
       this.isLoading = false;
       this.resetPasswordForm.reset();
     }
+  }
+
+  protected proceedToLogin() {
+    this.router.navigate(['/']);
+
+    setTimeout(() => {
+      this.sharedService.triggerLoginModal();
+    }, 100);
   }
 }
