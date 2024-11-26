@@ -77,3 +77,11 @@ export const cookie = {
     document.cookie = `${name}=; Path/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
   },
 };
+
+export const generateGuid = () => {
+  return (
+    'id-' +
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
+};
