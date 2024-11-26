@@ -133,29 +133,43 @@
           </div>
 
           <!-- Time Selection -->
+          <!--
           <div class="grid grid-cols-2 gap-4">
-            <div class="space-y-2">
-              <label class="block text-sm font-medium text-gray-700">
-                Start Time
-              </label>
-              <input
-                formControlName="startTime"
-                type="time"
-                class="w-full rounded-md border border-gray-300 p-2"
-                required
-              />
-            </div>
-            <div class="space-y-2">
-              <label class="block text-sm font-medium text-gray-700">
-                End Time
-              </label>
-              <input
-                formControlName="endTime"
-                type="time"
-                class="w-full rounded-md border border-gray-300 p-2"
-                required
-              />
-            </div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">
+              Start Time
+            </label>
+            <input
+              formControlName="startTime"
+              type="time"
+              class="w-full rounded-md border border-gray-300 p-2"
+              (change)="formatTime('startTime')"
+              required
+            />
+          </div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">
+              End Time
+            </label>
+            <input
+              formControlName="endTime"
+              type="time"
+              class="w-full rounded-md border border-gray-300 p-2"
+              (change)="formatTime('endTime')"
+              required
+            />
+        </div>
+          </div> -->
+
+          <div class="grid grid-cols-2 gap-4">
+            <app-clock-time-picker
+              formControlName="startTime"
+              [label]="'Start time'"
+            />
+            <app-clock-time-picker
+              formControlName="endTime"
+              [label]="'End time'"
+            />
           </div>
         </div>
 

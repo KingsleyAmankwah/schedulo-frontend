@@ -2,6 +2,10 @@ import { Component, Input } from '@angular/core';
 import { CustomButtonComponent } from '../../shared/components/custom-button/custom-button.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { BookingService } from './services/booking.service';
+import { ActivatedRoute } from '@angular/router';
+import { BookingRequest } from './types';
+import { ClockTimePickerComponent } from '../../shared/components/clock-time-picker/clock-time-picker.component';
 interface CalendarDate {
   date: number | null;
   isSelected: boolean;
@@ -11,7 +15,12 @@ interface CalendarDate {
 @Component({
   selector: 'app-booking-profile',
   standalone: true,
-  imports: [CustomButtonComponent, CommonModule, ReactiveFormsModule],
+  imports: [
+    CustomButtonComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    ClockTimePickerComponent,
+  ],
   templateUrl: './booking-profile.component.html',
   styleUrl: './booking-profile.component.css',
 })
@@ -20,8 +29,13 @@ export class BookingProfileComponent {
   weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   calendarDates: CalendarDate[] = [];
   currentDate: Date = new Date();
+  hostSlug: string | null = '';
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private bookingService: BookingService
+  ) {}
 
   protected bookingForm = this.fb.group({
     inviteeName: ['', [Validators.required]],
@@ -33,6 +47,8 @@ export class BookingProfileComponent {
   });
 
   ngOnInit() {
+    this.hostSlug = this.route.snapshot.paramMap.get('userId');
+    console.log(this.hostSlug);
     this.generateCalendarDates();
   }
 
@@ -163,10 +179,47 @@ export class BookingProfileComponent {
   onSubmit() {
     if (this.bookingForm.valid) {
       const formData = this.bookingForm.value;
-      console.log('Form submitted:', formData);
+      const data: BookingRequest = {
+        hostSlug: this.hostSlug,
+        inviteeName: formData.inviteeName,
+        inviteeEmail: formData.inviteeEmail,
+        summary: formData.summary,
+        date: formData.date,
+        startTime: formData.startTime,
+        endTime: formData.endTime,
+      };
+
+      this.bookingService.scheduleMeeting(data).subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+
+        error: (error) => {
+          console.log(error);
+        },
+      });
     } else {
       console.log('Form is invalid');
     }
+  }
+
+  formatTime(controlName: 'startTime' | 'endTime') {
+    const timeControl = this.bookingForm.get(controlName);
+    if (timeControl && timeControl.value) {
+      const [hours, minutes] = timeControl.value.split(':');
+      let formattedTime = this.convertTo12HourFormat(
+        parseInt(hours),
+        parseInt(minutes)
+      );
+      timeControl.setValue(formattedTime, { emitEvent: false });
+    }
+  }
+
+  convertTo12HourFormat(hours: number, minutes: number): string {
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const adjustedHours = hours % 12 || 12;
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+    return `${adjustedHours}:${paddedMinutes} ${period}`;
   }
 
   onCancel() {
