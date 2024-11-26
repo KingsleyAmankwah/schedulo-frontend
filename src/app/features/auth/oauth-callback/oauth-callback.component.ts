@@ -41,7 +41,6 @@ export class OauthCallbackComponent {
         this.authService.authStatus.set(true);
         this.authService.setUserDetailsFromToken(response.accessToken);
 
-        console.log(message);
         localStorage.removeItem('oauthProvider');
         this.router.navigate(['/dashboard']);
       },
