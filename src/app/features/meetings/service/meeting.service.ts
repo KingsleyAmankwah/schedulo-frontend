@@ -26,7 +26,7 @@ export class MeetingService {
   }
 
   public acceptMeeting(meetingId: string, status: MeetingStatus) {
-    return this.http.put<MeetingStatus>(
+    return this.http.put<BookingResponse>(
       `${meeting}/${meetingId}/accept`,
       status
     );

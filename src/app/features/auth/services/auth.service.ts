@@ -84,7 +84,7 @@ export class AuthService {
 
   private redirectToAppropriateRoute() {
     const currentRoute = this.router.url;
-    if (currentRoute === '/') {
+    if (currentRoute === '/' || currentRoute === '') {
       this.router.navigate(['/dashboard']);
     }
   }
