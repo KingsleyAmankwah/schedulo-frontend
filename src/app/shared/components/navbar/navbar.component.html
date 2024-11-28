@@ -2,7 +2,7 @@
   class="mx-auto py-2 px-4 flex justify-between items-center shadow-md border-b-2"
 >
   <img
-    src="/assets/logo.png"
+    [src]="'/assets/logo.png'"
     alt="logo"
     width="150"
     height="60"
@@ -22,7 +22,7 @@
 
     <div class="flex items-center gap-2">
       <img
-        [src]="'/assets/icons/auth-user-icon.svg'"
+        [src]="userDetails?.profilePhoto || '/assets/icons/auth-user-icon.svg'"
         alt="avatar"
         class="lg:block hidden w-5 h-5 rounded-full"
       />
