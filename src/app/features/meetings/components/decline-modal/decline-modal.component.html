@@ -52,10 +52,11 @@
         />
 
         <app-custom-button
-          [text]="'Yes proceed to decline'"
+          [text]="isLoading ? 'Loading...' : 'Yes proceed to decline'"
           [buttonColor]="'danger'"
           [buttonType]="'button'"
           (buttonClick)="declineMeeting()"
+          [disabled]="isLoading"
         />
       </div>
     </form>

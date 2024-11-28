@@ -15,6 +15,7 @@ import { BookingResponse } from '../../../booking-profile/types';
   styleUrl: './decline-modal.component.css',
 })
 export class DeclineModalComponent {
+  isLoading = false;
   @Input() meetingId = '';
   @Input() showModal = false;
   @Output() meetingCancelled = new EventEmitter<string>();
@@ -27,6 +28,7 @@ export class DeclineModalComponent {
     this.showModal = false;
   }
   protected declineMeeting() {
+    this.isLoading = true;
     if (!this.meetingId) {
       this.sharedService.infoToastr('No meeting id found');
       return;
@@ -38,11 +40,13 @@ export class DeclineModalComponent {
         next: (response: BookingResponse) => {
           this.sharedService.successToastr(response.message);
           this.meetingCancelled.emit(this.meetingId);
+          this.isLoading = false;
           this.onClose();
         },
 
         error: (error) => {
           this.sharedService.errorToastr(error.error.message);
+          this.isLoading = false;
         },
       });
   }
