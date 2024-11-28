@@ -7,6 +7,8 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { RescheduleModalComponent } from './components/reschedule-modal/reschedule-modal.component';
 import { DeclineModalComponent } from './components/decline-modal/decline-modal.component';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { SharedService } from '../../shared/services/shared.service';
+import { AcceptModalComponent } from './components/accept-modal/accept-modal.component';
 
 @Component({
   selector: 'app-meetings',
@@ -18,6 +20,7 @@ import { LoaderComponent } from '../../shared/components/loader/loader.component
     DeclineModalComponent,
     LoaderComponent,
     CommonModule,
+    AcceptModalComponent,
   ],
   templateUrl: './meetings.component.html',
   styleUrl: './meetings.component.css',
@@ -25,6 +28,7 @@ import { LoaderComponent } from '../../shared/components/loader/loader.component
 export class MeetingsComponent {
   private meetingService = inject(MeetingService);
   private authService = inject(AuthService);
+  private sharedService = inject(SharedService);
   protected userMeetings: Meeting[] = [];
   protected MeetingStatus = MeetingStatus;
   private userId: string | undefined =
@@ -35,11 +39,12 @@ export class MeetingsComponent {
 
   protected isRescheduleModalOpen = false;
   protected isDeclinedModalOpen = false;
+  protected isAcceptModalOpen = false;
+  protected isLoading = true;
   protected acceptMeet = MeetingStatus.Upcoming;
 
   ngOnInit() {
     this.fetchUserMeetings();
-    this.meetingId;
   }
 
   private fetchUserMeetings() {
@@ -52,25 +57,17 @@ export class MeetingsComponent {
           this.inviteeEmail = meeting.inviteeEmail;
           this.inviteeName = meeting.inviteeName;
         });
+        this.isLoading = false;
       },
       error: (error) => {
-        console.log('Error fetching user meetings', error);
+        this.sharedService.warningToastr(error);
+        this.isLoading = false;
       },
     });
   }
 
-  protected acceptInvite() {
-    this.meetingService
-      .acceptMeeting(this.meetingId, this.acceptMeet)
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-          this.fetchUserMeetings();
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      });
+  onAcceptMeeting() {
+    this.fetchUserMeetings();
   }
 
   onDeclineMeetingSuccess() {
@@ -80,11 +77,18 @@ export class MeetingsComponent {
     this.fetchUserMeetings();
   }
 
-  protected toggleScheduleModal() {
+  protected toggleScheduleModal(meeting: Meeting) {
+    this.meetingId = meeting.id;
     this.isRescheduleModalOpen = !this.isRescheduleModalOpen;
   }
 
-  protected toggleDeclineModal() {
+  protected toggleDeclineModal(meeting: Meeting) {
+    this.meetingId = meeting.id;
     this.isDeclinedModalOpen = !this.isDeclinedModalOpen;
+  }
+
+  protected toggleAcceptModal(meeting: Meeting) {
+    this.meetingId = meeting.id;
+    this.isAcceptModalOpen = !this.isAcceptModalOpen;
   }
 }
