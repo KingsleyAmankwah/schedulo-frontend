@@ -26,7 +26,7 @@ interface CalendarDate {
   styleUrl: './booking-profile.component.css',
 })
 export class BookingProfileComponent {
-  showModal = false;
+  isLoading = false;
   weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   calendarDates: CalendarDate[] = [];
   currentDate: Date = new Date();
@@ -176,6 +176,7 @@ export class BookingProfileComponent {
 
   onSubmit() {
     if (this.bookingForm.valid) {
+      this.isLoading = true;
       const formData = this.bookingForm.value;
       const data: BookingRequest = {
         hostSlug: this.hostSlug,
@@ -191,9 +192,11 @@ export class BookingProfileComponent {
         next: (response: BookingResponse) => {
           this.sharedService.successToastr(response.message);
           this.bookingForm.reset();
+          this.isLoading = false;
         },
         error: (error) => {
           this.sharedService.errorToastr(error.error.message);
+          this.isLoading = false;
         },
       });
     } else {
@@ -222,7 +225,7 @@ export class BookingProfileComponent {
     return `${adjustedHours}:${paddedMinutes} ${period}`;
   }
 
-  onCancel() {
-    this.showModal = !this.showModal;
-  }
+  // onCancel() {
+  //   this.showModal = !this.showModal;
+  // }
 }

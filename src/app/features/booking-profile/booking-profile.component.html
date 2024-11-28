@@ -1,5 +1,5 @@
 <div
-  class="fixed top-0 z-50 left-0 bg-[rgba(0,0,0,0.5)] flex justify-center items-center w-[100vw] h-[100vh]"
+  class="fixed top-0 z-50 left-0 bg-[rgba(0,0,0,0.9)] flex justify-center items-center w-[100vw] h-[100vh]"
 >
   <div
     class="bg-white w-full max-w-4xl mx-auto p-4 relative max-h-[90vh] overflow-y-auto"
@@ -22,7 +22,7 @@
       </svg>
       Book a Session
     </h2>
-    <button
+    <!-- <button
       (click)="onCancel()"
       type="button"
       class="bg-black text-white rounded-lg w-8 h-8 ms-auto inline-flex justify-center items-center text-xs absolute top-[2%] right-[2%]"
@@ -42,7 +42,7 @@
           d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
         />
       </svg>
-    </button>
+    </button> -->
 
     <form class="space-y-6" [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
       <!-- Two Column Layout -->
@@ -221,9 +221,10 @@
       <!-- Action Buttons -->
       <div class="flex justify-end mt-4 space-x-2">
         <app-custom-button
-          [iconName]="'event_repeat'"
-          [text]="'Book a Session'"
+          [iconName]="isLoading ? 'cached' : 'event_repeat'"
+          [text]="isLoading ? 'Loading...' : 'Book a Session'"
           [buttonType]="'submit'"
+          [disabled]="isLoading || bookingForm.invalid"
         />
       </div>
     </form>
