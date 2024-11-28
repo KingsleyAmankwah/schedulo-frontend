@@ -11,6 +11,7 @@ import {
 import { AuthService } from './services/auth.service';
 import { LoginData, RegisterData, VerificationResponse } from './interfaces';
 import { SharedService } from '../../shared/services/shared.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -27,12 +28,13 @@ import { SharedService } from '../../shared/services/shared.service';
 export class AuthComponent {
   @Input() authMode: 'login' | 'register' | 'forgotPassword' = 'login';
   @Output() closeModal = new EventEmitter();
-  protected isLoading = false;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private router: Router
   ) {}
 
   public switchMode(newMode?: 'login' | 'register' | 'forgotPassword') {
@@ -104,9 +106,11 @@ export class AuthComponent {
           this.sharedService.successToastr(response.message);
           this.registerForm.reset();
           this.triggerModalClose();
+          this.isLoading = false;
         },
         error: (error) => {
           this.sharedService.errorToastr(error.error.message);
+          this.isLoading = false;
         },
       });
     }
@@ -121,9 +125,22 @@ export class AuthComponent {
         password: this.loginForm.value.password!,
       };
 
-      this.authService.login(userData);
-      this.isLoading = false;
-      this.triggerModalClose();
+      this.authService.login(userData).subscribe({
+        next: (response) => {
+          const { accessToken, refreshToken, message } = response;
+          this.authService.setTokens(accessToken, refreshToken);
+          this.authService.authStatus.set(true);
+          this.authService.setUserDetailsFromToken(accessToken);
+          this.triggerModalClose();
+          this.router.navigate(['/dashboard']);
+          this.sharedService.successToastr(message);
+          this.isLoading = false;
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.sharedService.errorToastr(error.error.message);
+        },
+      });
     }
   }
 
