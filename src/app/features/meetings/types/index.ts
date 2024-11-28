@@ -8,7 +8,7 @@ export type Meeting = {
   inviteeEmail: string;
   linkActive: boolean;
   summary: string;
-  joinLink: string;
+  join_link: string;
   createdAt: string;
   updatedAt: string;
 };
