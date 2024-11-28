@@ -1,5 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
+} from '@angular/core';
 import { AuthService } from '../../../features/auth/services/auth.service';
 
 @Component({
@@ -16,23 +25,33 @@ export class ShareProfileModalComponent {
 
   copied = false;
   protected profileURL = 'http:localhost:4200/profile/';
-  private generatedProfile = '';
+  protected generatedProfile = signal('');
   private authService = inject(AuthService);
 
-  ngOnInit() {
-    this.profileLink = this.authService.getUserDetails()?.profile;
-    this.generateProfileLink();
+  profileDetails = computed(() => {
+    const userDetails = this.authService.getUserDetails();
+    return userDetails?.profile ?? '';
+  });
+
+  constructor() {
+    effect(
+      () => {
+        const profile = this.profileDetails();
+        if (profile) {
+          this.generateProfileLink(profile);
+        }
+      },
+      { allowSignalWrites: true }
+    );
   }
 
-  protected generateProfileLink() {
-    if (this.profileLink) {
-      this.generatedProfile = `${this.profileURL}${this.profileLink}`;
-    }
+  protected generateProfileLink(profile: string) {
+    this.generatedProfile.set(`${this.profileURL}${profile}`);
   }
 
   async copyToClipboard() {
     try {
-      await navigator.clipboard.writeText(this.generatedProfile);
+      await navigator.clipboard.writeText(this.generatedProfile());
       this.copied = true;
       setTimeout(() => {
         this.copied = false;
@@ -43,7 +62,7 @@ export class ShareProfileModalComponent {
   }
 
   getShareUrl(platform: string): string {
-    const encodedLink = encodeURIComponent(this.generatedProfile);
+    const encodedLink = encodeURIComponent(this.generatedProfile());
     const text = encodeURIComponent(`Check out this profile!`);
 
     switch (platform) {
