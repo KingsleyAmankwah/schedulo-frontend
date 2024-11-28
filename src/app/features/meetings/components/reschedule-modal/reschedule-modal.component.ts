@@ -192,16 +192,18 @@ export class RescheduleModalComponent {
       this.meetingService.rescheduleMeeting(this.meetingId, data).subscribe({
         next: (response: BookingResponse) => {
           this.sharedService.successToastr(response.message);
-          this.showModal = !this.showModal;
           this.onMeetingReschedule.emit();
+          this.onCancel();
         },
 
         error: (error) => {
-          this.sharedService.errorToastr(error.error.error);
+          this.sharedService.errorToastr(error.error.message);
         },
       });
     } else {
-      console.log('Form is invalid');
+      this.sharedService.warningToastr(
+        'Please all fields are required to be filled'
+      );
     }
   }
 
