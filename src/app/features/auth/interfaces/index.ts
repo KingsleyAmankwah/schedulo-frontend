@@ -30,6 +30,7 @@ export interface UserDetails {
   user_id: string;
   role: string;
   profile: string;
+  profilePhoto: string;
 }
 
 export interface ErrorResponse {
