@@ -4,11 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import { auth } from '../../../shared/constants/apiEndpoints';
 import { AuthService } from '../services/auth.service';
 import { AuthResponse } from '../interfaces';
+import { LoaderComponent } from '../../../shared/components/loader/loader.component';
+import { SharedService } from '../../../shared/services/shared.service';
 
 @Component({
   selector: 'app-oauth-callback',
   standalone: true,
-  imports: [],
+  imports: [LoaderComponent],
   templateUrl: './oauth-callback.component.html',
   styleUrl: './oauth-callback.component.css',
 })
@@ -17,7 +19,8 @@ export class OauthCallbackComponent {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private sharedService: SharedService
   ) {}
 
   ngOnInit() {
@@ -27,7 +30,9 @@ export class OauthCallbackComponent {
     if (code && provider) {
       this.exchangeToken(code, provider);
     } else {
-      console.warn('Authorization code or provider not found');
+      this.sharedService.errorToastr(
+        'Authorization code or provider not found'
+      );
     }
   }
 
@@ -36,7 +41,7 @@ export class OauthCallbackComponent {
 
     this.http.post<AuthResponse>(apiUrl, { code, provider }).subscribe({
       next: (response) => {
-        const { accessToken, refreshToken, message } = response;
+        const { accessToken, refreshToken } = response;
         this.authService.setTokens(accessToken, refreshToken);
         this.authService.authStatus.set(true);
         this.authService.setUserDetailsFromToken(response.accessToken);
@@ -44,7 +49,8 @@ export class OauthCallbackComponent {
         localStorage.removeItem('oauthProvider');
         this.router.navigate(['/dashboard']);
       },
-      error: (error) => console.warn('OAuth token exchange failed:', error),
+      error: (error) =>
+        this.sharedService.errorToastr('OAuth token exchange failed'),
     });
   }
 }
