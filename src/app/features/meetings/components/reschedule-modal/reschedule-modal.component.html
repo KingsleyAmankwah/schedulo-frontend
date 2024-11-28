@@ -168,8 +168,9 @@
 
         <app-custom-button
           [iconName]="'event_repeat'"
-          [text]="'Reschedule'"
+          [text]="isLoading ? 'Loading...' : 'Reschedule'"
           [buttonType]="'submit'"
+          [disabled]="isLoading"
         />
       </div>
     </form>

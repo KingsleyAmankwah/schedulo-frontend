@@ -32,6 +32,7 @@ interface CalendarDate {
   styleUrl: './reschedule-modal.component.css',
 })
 export class RescheduleModalComponent {
+  isLoading = false;
   @Input() showModal = false;
   @Input() meetingId = '';
   @Input() inviteeEmail = '';
@@ -179,6 +180,7 @@ export class RescheduleModalComponent {
 
   onSubmit() {
     if (this.rescheduleForm.valid) {
+      this.isLoading = true;
       const formData = this.rescheduleForm.value;
       const data: MeetingRescheduleRequest = {
         meetingId: this.meetingId,
@@ -194,10 +196,12 @@ export class RescheduleModalComponent {
           this.sharedService.successToastr(response.message);
           this.onMeetingReschedule.emit();
           this.onCancel();
+          this.isLoading = false;
         },
 
         error: (error) => {
           this.sharedService.errorToastr(error.error.message);
+          this.isLoading = false;
         },
       });
     } else {
