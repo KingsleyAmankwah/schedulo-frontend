@@ -69,21 +69,7 @@ export class AuthService {
   }
 
   public login(credentials: LoginData) {
-    return this.http
-      .post<AuthResponse>(`${auth}/login`, credentials)
-      .subscribe({
-        next: (response) => {
-          const { accessToken, refreshToken, message } = response;
-          this.setTokens(accessToken, refreshToken);
-          this.authStatus.set(true);
-          this.setUserDetailsFromToken(accessToken);
-          this.router.navigate(['/dashboard']);
-          this.sharedService.successToastr(message);
-        },
-        error: (error) => {
-          this.sharedService.errorToastr(error.error.message);
-        },
-      });
+    return this.http.post<AuthResponse>(`${auth}/login`, credentials);
   }
 
   private isTokenExpired(token: string): boolean {
@@ -192,7 +178,7 @@ export class AuthService {
       this.authStatus.set(false);
       this.userDetails.set(null);
 
-      this.router.navigate(['/']).then(() => {
+      this.router.navigate(['/auth']).then(() => {
         window.location.reload();
       });
     } catch (error) {
