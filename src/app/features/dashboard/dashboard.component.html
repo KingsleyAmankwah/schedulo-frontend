@@ -1,0 +1,289 @@
+<div class="mx-auto py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+    <!-- User Profile Section -->
+    <div class="md:col-span-1 bg-white shadow-lg rounded-xl p-6">
+      <div class="flex flex-col items-center">
+        <div class="relative">
+          <img
+            [src]="user?.profilePhoto || '/assets/icons/auth-user-icon.svg'"
+            alt="Profile Picture"
+            class="w-32 h-32 rounded-full object-cover mb-4"
+          />
+          <span
+            class="absolute bottom-0 right-0 bg-green-500 w-4 h-4 rounded-full border-2 border-white"
+          ></span>
+        </div>
+        <h2
+          class="lg:text-xl text-base text-center font-semibold text-gray-800"
+        >
+          {{ user?.name }}
+        </h2>
+        <p class="text-gray-500 text-xs">
+          {{ user?.sub }}
+        </p>
+        <div class="mt-4 w-full">
+          <div class="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <p class="font-bold text-xl">
+                <!-- {{ profileVisits }} -->
+                0
+              </p>
+              <p class="text-sm text-primary-200">Profile Visits</p>
+            </div>
+            <div>
+              <p class="font-bold text-xl">
+                {{ totalMeetings }}
+              </p>
+              <p class="text-sm text-primary-200">Total Meetings</p>
+            </div>
+            <!-- <div>
+              <p class="font-bold text-xl">
+                {{ completedMeetings }}
+              </p>
+              <p class="text-sm text-gray-500">Completed</p>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meetings and Metrics Section -->
+    <div class="md:col-span-2 space-y-6">
+      <!-- Quick Stats -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="bg-blue-50 p-4 rounded-xl shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm text-blue-600 font-medium">
+                Upcoming Meetings
+              </h3>
+              <p class="text-2xl font-bold text-blue-800">
+                {{ upcomingMeetings.length || 0 }}
+              </p>
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 text-blue-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="bg-green-50 p-4 rounded-xl shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm text-green-600 font-medium">
+                Pending Meetings
+              </h3>
+              <p class="text-2xl font-bold text-green-800">
+                {{ pendingMeetings.length || 0 }}
+              </p>
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 text-green-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-xl shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm text-purple-600 font-medium">
+                Total Contacts
+              </h3>
+              <p class="text-2xl font-bold text-purple-800">0</p>
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 text-purple-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Meetings -->
+      <div class="bg-white shadow-lg rounded-xl p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold text-gray-800">Upcoming Meetings</h2>
+          <a
+            routerLink="/meetings"
+            class="text-primary-100 hover:underline cursor-pointer"
+            >View All</a
+          >
+        </div>
+        @if (upcomingMeetings.length) {
+        <div class="space-y-4">
+          @for (meeting of upcomingMeetings.slice(0, 3); track meeting.id) {
+          <div
+            class="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+          >
+            <div>
+              <h3 class="font-semibold">
+                {{ meeting.summary }}
+              </h3>
+              <p class="text-sm text-gray-500">
+                {{ meeting.date | date : "fullDate" }}
+
+                {{ meeting.startTime }} - {{ meeting.endTime }}
+              </p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-gray-600">
+                {{ meeting.inviteeName }}
+              </span>
+              <img
+                [src]="'/assets/icons/auth-user-icon.svg'"
+                class="w-5 h-5 rounded-full"
+              />
+            </div>
+          </div>
+          }
+        </div>
+        } @else {
+        <div class="text-center text-gray-500 py-4">No upcoming meetings</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional Insights -->
+  <!-- 
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    
+    <div class="bg-white shadow-lg rounded-xl p-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
+      <div class="space-y-4">
+        @for (activity of recentActivities; track activity.id) {
+        <div class="flex items-center space-x-4 border-b pb-2 last:border-b-0">
+          <div class="bg-gray-100 p-2 rounded-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-gray-600"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"
+              />
+              <path
+                d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"
+              />
+            </svg>
+          </div>
+          <div>
+            <p class="font-medium">
+              {{ activity.description }}
+            </p>
+            <p class="text-sm text-gray-500">
+              {{ activity.timestamp | timeAgo }}
+            </p>
+          </div>
+        </div>
+        }
+      </div>
+    </div> -->
+
+  <!-- Quick Actions -->
+  <!-- <div class="bg-white shadow-lg rounded-xl p-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+      <div class="grid grid-cols-3 gap-4">
+        <button
+          routerLink="/availability"
+          class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-primary-100 mb-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span class="text-sm">Set Availability</span>
+        </button>
+        <button
+          routerLink="/meetings"
+          class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-green-600 mb-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+          <span class="text-sm">Schedule Meeting</span>
+        </button>
+        <button
+          routerLink="/settings"
+          class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-blue-600 mb-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          <span class="text-sm">Settings</span>
+        </button>
+      </div>
+    </div> 
+    
+  </div>
+    -->
+</div>
