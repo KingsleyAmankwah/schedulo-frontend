@@ -14,6 +14,7 @@ import { SharedService } from '../../../../shared/services/shared.service';
   styleUrl: './accept-modal.component.css',
 })
 export class AcceptModalComponent {
+  isLoading = false;
   @Input() showModal = false;
   @Input() meetingId = '';
   @Output() meetingAccepted = new EventEmitter();
@@ -27,16 +28,19 @@ export class AcceptModalComponent {
   }
 
   protected acceptInvite() {
+    this.isLoading = true;
     this.meetingService
       .acceptMeeting(this.meetingId, this.meetStats)
       .subscribe({
         next: (response: BookingResponse) => {
           this.meetingAccepted.emit(this.meetingId);
           this.sharedService.successToastr(response.message);
+          this.isLoading = false;
           this.onCancel();
         },
         error: (error) => {
           this.sharedService.errorToastr(error.error.message);
+          this.isLoading = false;
         },
       });
   }

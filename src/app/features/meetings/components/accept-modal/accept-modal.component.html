@@ -54,8 +54,9 @@
 
         <app-custom-button
           (buttonClick)="acceptInvite()"
-          [text]="'Yes'"
+          [text]="isLoading ? 'Loading...' : 'Yes'"
           [buttonType]="'button'"
+          [disabled]="isLoading"
         />
       </div>
     </form>
