@@ -16,8 +16,8 @@
   <!-- </div> -->
   <!-- } -->
 
-  <div class="grid grid-cols-1 gap-4 mt-4">
-    @if (userDeclinedMeetings.length === 0) {
+  <div class="grid grid-cols-1 gap-4 mt-4 max-h-96 overflow-y-auto">
+    @if (userDeclinedMeetings.length === 0 && !isLoading) {
     <div class="flex flex-col items-center justify-center p-8 text-center">
       <svg
         class="w-48 h-48 mb-6"
@@ -50,7 +50,7 @@
         You don't have any meetings declined at the moment.
       </p>
     </div>
-    }@else { @defer{ @for (meeting of userDeclinedMeetings; track meeting.id) {
+    }@else { @for (meeting of userDeclinedMeetings; track meeting.id) {
     <div class="meeting border-b-2 pb-4">
       <div class="duration">
         <h2 class="text-gray-500">{{ meeting.date | date : "fullDate" }}</h2>
@@ -62,7 +62,7 @@
 
         @if (meeting.status === meetingStatus.Upcoming) {
         <a
-          [href]="meeting.joinLink"
+          [href]="meeting.join_link"
           class="underline flex items-center gap-2 text-primary-100"
           target="_blank"
         >
@@ -109,9 +109,10 @@
         }
       </div>
     </div>
-
-    } }@loading {
-    <app-loader />
     } }
   </div>
 </div>
+
+@if (isLoading) {
+<app-loader />
+}

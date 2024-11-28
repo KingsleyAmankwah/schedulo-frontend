@@ -6,6 +6,7 @@ import { AuthService } from '../auth/services/auth.service';
 import { response } from 'express';
 import { DatePipe } from '@angular/common';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { SharedService } from '../../shared/services/shared.service';
 
 @Component({
   selector: 'app-archives',
@@ -19,8 +20,10 @@ export class ArchivesComponent {
   private authService = inject(AuthService);
   private userId = this.authService.getUserDetails()?.user_id;
   protected userDeclinedMeetings: Meeting[] = [];
+  protected isLoading = true;
 
   protected meetingStatus = MeetingStatus;
+  private sharedService = inject(SharedService);
 
   ngOnInit() {
     this.fetchUserMeetings();
@@ -30,10 +33,12 @@ export class ArchivesComponent {
     this.meetingService.getDeclinedMeetings(this.userId).subscribe({
       next: (response) => {
         this.userDeclinedMeetings = response;
+        this.isLoading = false;
       },
 
       error: (error) => {
-        console.log(error);
+        this.sharedService.warningToastr(error);
+        this.isLoading = false;
       },
     });
   }
