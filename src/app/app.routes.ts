@@ -4,7 +4,7 @@ import { LayoutComponent } from './shared/components/layout/layout.component';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'home',
     loadComponent: () =>
       import('./features/home/home.component').then((c) => c.HomeComponent),
   },
@@ -24,12 +24,18 @@ export const routes: Routes = [
   },
 
   {
-    path: 'dashboard',
+    path: '',
     component: LayoutComponent,
     canActivate: [authGuard],
     children: [
       {
         path: '',
+        redirectTo: '/dashboard',
+        pathMatch: 'full',
+      },
+
+      {
+        path: 'dashboard',
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then(
             (c) => c.DashboardComponent
@@ -68,5 +74,10 @@ export const routes: Routes = [
           ),
       },
     ],
+  },
+
+  {
+    path: '**',
+    redirectTo: 'auth',
   },
 ];
