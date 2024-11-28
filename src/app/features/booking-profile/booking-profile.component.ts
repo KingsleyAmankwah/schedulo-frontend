@@ -193,12 +193,12 @@ export class BookingProfileComponent {
           this.bookingForm.reset();
         },
         error: (error) => {
-          this.sharedService.errorToastr(error.error.error);
+          this.sharedService.errorToastr(error.error.message);
         },
       });
     } else {
       this.sharedService.warningToastr(
-        'Please all field are required to be filled'
+        'Please all fields are required to be filled'
       );
     }
   }
@@ -223,7 +223,6 @@ export class BookingProfileComponent {
   }
 
   onCancel() {
-    console.log('clicked');
     this.showModal = !this.showModal;
   }
 }
