@@ -1,12 +1,12 @@
 <div class="flex flex-col lg:border rounded-lg lg:px-4 py-4">
-  <!-- @if (userMeetings ! === []) { -->
+  <!-- @if (userMeetings ! === []) {
   <div class="flex justify-between">
-    <div>
-      <h1 class="font-semibold text-xl">Upcoming Meetings</h1>
-      <p class="text-gray-500">
-        See the upcoming events which were booked with you.
-      </p>
-    </div>
+    <div> -->
+  <h1 class="font-semibold text-xl">Upcoming Meetings</h1>
+  <p class="text-gray-500">
+    See the upcoming events which were booked with you.
+  </p>
+  <!-- </div>
 
     <app-custom-button
       [iconName]="'tune'"
@@ -14,10 +14,10 @@
       [buttonType]="'button'"
     />
   </div>
-  <!-- } -->
+  } -->
 
-  <div class="grid grid-cols-1 gap-4 mt-4">
-    @if (userMeetings.length === 0) {
+  <div class="grid grid-cols-1 gap-4 mt-4 max-h-96 overflow-y-auto">
+    @if (userMeetings.length === 0 && !isLoading) {
     <div class="flex flex-col items-center justify-center p-8 text-center">
       <svg
         class="w-48 h-48 mb-6"
@@ -50,7 +50,7 @@
         You don't have any meetings scheduled at the moment.
       </p>
     </div>
-    }@else { @defer{ @for (meeting of userMeetings; track meeting.id) {
+    }@else { @for (meeting of userMeetings; track meeting.id) {
     <div class="meeting border-b-2 pb-4">
       <div class="duration">
         <h2 class="text-gray-500">{{ meeting.date | date : "fullDate" }}</h2>
@@ -91,7 +91,7 @@
           [iconName]="'event_repeat'"
           [text]="'Reschedule'"
           [buttonType]="'button'"
-          (buttonClick)="toggleScheduleModal()"
+          (buttonClick)="toggleScheduleModal(meeting)"
         />
         @if (meeting.status == MeetingStatus.Pending) {
         <app-custom-button
@@ -99,7 +99,7 @@
           [text]="'Accept'"
           [buttonType]="'button'"
           [buttonColor]="'primary'"
-          (buttonClick)="acceptInvite()"
+          (buttonClick)="toggleAcceptModal(meeting)"
         />
 
         <app-custom-button
@@ -107,14 +107,12 @@
           [text]="'Decline'"
           [buttonColor]="'danger'"
           [buttonType]="'button'"
-          (buttonClick)="toggleDeclineModal()"
+          (buttonClick)="toggleDeclineModal(meeting)"
         />
         }
       </div>
     </div>
 
-    } }@loading {
-    <app-loader />
     } }
   </div>
 </div>
@@ -133,4 +131,12 @@
   [showModal]="isDeclinedModalOpen"
   (meetingCancelled)="onDeclineMeetingSuccess()"
 />
+}@if (isAcceptModalOpen) {
+<app-accept-modal
+  [meetingId]="meetingId"
+  [showModal]="isAcceptModalOpen"
+  (meetingAccepted)="onAcceptMeeting()"
+/>
+} @if (isLoading) {
+<app-loader />
 }
