@@ -31,19 +31,18 @@ export class DeclineModalComponent {
       this.sharedService.infoToastr('No meeting id found');
       return;
     }
+
     this.meetingService
       .cancelMeeting(this.meetingId, this.meetStats)
       .subscribe({
         next: (response: BookingResponse) => {
-          // console.log(response);
           this.sharedService.successToastr(response.message);
           this.meetingCancelled.emit(this.meetingId);
           this.onClose();
         },
 
         error: (error) => {
-          // console.log(error);
-          this.sharedService.errorToastr(error.error.error);
+          this.sharedService.errorToastr(error.error.message);
         },
       });
   }
