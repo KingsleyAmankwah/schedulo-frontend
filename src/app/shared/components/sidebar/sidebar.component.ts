@@ -18,8 +18,8 @@ export class SidebarComponent {
 
   protected sidebarNavItems = [
     {
-      name: 'Availability',
-      location: 'availability',
+      name: 'Dashboard',
+      location: 'dashboard',
     },
 
     {
@@ -30,11 +30,6 @@ export class SidebarComponent {
     {
       name: 'Archives',
       location: 'archives',
-    },
-
-    {
-      name: 'Settings',
-      location: 'settings',
     },
 
     {
