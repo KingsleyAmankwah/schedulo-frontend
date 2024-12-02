@@ -132,7 +132,9 @@
       <!-- Upcoming Meetings -->
       <div class="bg-white shadow-lg rounded-xl p-6">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold text-gray-800">Upcoming Meetings</h2>
+          <h2 class="text-xl font-bold text-gray-800">
+            Upcoming Meetings Today
+          </h2>
           <a
             routerLink="/meetings"
             class="text-primary-100 hover:underline cursor-pointer"
@@ -146,7 +148,7 @@
             class="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
           >
             <div>
-              <h3 class="font-semibold">
+              <h3 class="font-semibold w-3/4">
                 {{ meeting.summary }}
               </h3>
               <p class="text-sm text-gray-500">
@@ -168,7 +170,9 @@
           }
         </div>
         } @else {
-        <div class="text-center text-gray-500 py-4">No upcoming meetings</div>
+        <div class="text-center text-gray-500 py-4 text-sm">
+          No upcoming meetings today
+        </div>
         }
       </div>
     </div>

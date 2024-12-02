@@ -50,12 +50,10 @@ export class MeetingsComponent {
   private fetchUserMeetings() {
     this.meetingService.getUserMeetings(this.userId).subscribe({
       next: (response) => {
-        this.userMeetings = response;
-
-        this.userMeetings.forEach((meeting) => {
-          this.meetingId = meeting.id;
-          this.inviteeEmail = meeting.inviteeEmail;
-          this.inviteeName = meeting.inviteeName;
+        this.userMeetings = response.sort((a, b) => {
+          const dateA = new Date(`${a.date} ${a.startTime}`);
+          const dateB = new Date(`${b.date} ${b.startTime}`);
+          return dateA.getTime() - dateB.getTime();
         });
         this.isLoading = false;
       },

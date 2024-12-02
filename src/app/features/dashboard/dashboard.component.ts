@@ -34,9 +34,27 @@ export class DashboardComponent {
 
   private loadDashboardData() {
     this.user = this.authService.getUserDetails();
+    console.log(this.user);
 
     this.meetingService.getUserMeetings(this.userId).subscribe((meetings) => {
-      this.upcomingMeetings = meetings.filter((m) => m.status == 'UPCOMING');
+      this.upcomingMeetings = meetings
+        .filter((m) => {
+          const today = new Date();
+          const meetingDate = new Date(m.date);
+
+          return (
+            m.status == 'UPCOMING' &&
+            meetingDate.getDate() === today.getDate() &&
+            meetingDate.getMonth() === today.getMonth() &&
+            meetingDate.getFullYear() === today.getFullYear()
+          );
+        })
+        .sort((a, b) => {
+          const timeA = new Date(`1970/01/01 ${a.startTime}`);
+          const timeB = new Date(`1970/01/01 ${b.startTime}`);
+
+          return timeA.getTime() - timeB.getTime();
+        });
       this.pendingMeetings = meetings.filter((m) => m.status == 'PENDING');
       this.totalMeetings = meetings.length;
     });

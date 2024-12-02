@@ -105,7 +105,6 @@
             type="button"
             *ngFor="let date of calendarDates"
             [disabled]="!isValidDate(date)"
-            [title]="!isValidDate(date) ? 'Past dates cannot be selected' : ''"
             (click)="selectDate(date)"
             [ngClass]="[
               'h-10 w-10 text-sm text-center rounded-full transition-colors',

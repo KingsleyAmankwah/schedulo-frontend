@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { RouterOutlet } from '@angular/router';
-import { LogoutModalComponent } from "../logout-modal/logout-modal.component";
+import { LogoutModalComponent } from '../logout-modal/logout-modal.component';
 
 @Component({
   selector: 'app-layout',
@@ -12,6 +12,7 @@ import { LogoutModalComponent } from "../logout-modal/logout-modal.component";
 })
 export class LayoutComponent {
   showLogoutModal = false;
+  public sidebarExpanded = false;
 
   public triggerLogoutModal() {
     this.showLogoutModal = !this.showLogoutModal;
