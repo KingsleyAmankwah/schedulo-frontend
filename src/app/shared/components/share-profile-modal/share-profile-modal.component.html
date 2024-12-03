@@ -1,5 +1,8 @@
-<div *ngIf="showSharePopup" class="modal-overlay">
-  <div class="modal-content">
+<div
+  *ngIf="showSharePopup"
+  class="fixed top-0 z-50 left-0 bg-[rgba(0,0,0,0.5)] flex justify-center items-center w-[100vw] h-[100vh]"
+>
+  <div class="bg-white w-full max-w-2xl mx-auto p-8 relative rounded-lg">
     <button
       (click)="closeSharePopup()"
       type="button"
@@ -21,7 +24,7 @@
         />
       </svg>
     </button>
-    <h2 class="text-left font-bold">Share Profile</h2>
+    <h2 class="text-left text-xl font-medium">Share Profile</h2>
     <p>Copy the link below to share your profile:</p>
     <div class="flex my-5">
       <input
