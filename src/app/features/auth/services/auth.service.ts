@@ -1,15 +1,14 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import {
   AuthResponse,
-  ErrorResponse,
   LoginData,
   ResetPasswordResponse,
   RegisterData,
   UserDetails,
   VerificationResponse,
 } from '../interfaces';
-import { auth, events } from '../../../shared/constants/apiEndpoints';
+import { auth } from '../../../shared/constants/apiEndpoints';
 import { cookie } from '../../../shared/utils';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
@@ -84,7 +83,18 @@ export class AuthService {
 
   private redirectToAppropriateRoute() {
     const currentRoute = this.router.url;
-    if (currentRoute === '/' || currentRoute === '') {
+    const publicRoutes = [
+      '/auth',
+      '/auth/activate-account',
+      '/auth/callback',
+      '/auth/request-token',
+      '/auth/reset-password',
+      '/auth/password-reset-failed',
+      '/auth/onboarding',
+      '/home',
+    ];
+
+    if (publicRoutes.includes(currentRoute)) {
       this.router.navigate(['/dashboard']);
     }
   }
@@ -178,7 +188,7 @@ export class AuthService {
       this.authStatus.set(false);
       this.userDetails.set(null);
 
-      this.router.navigate(['/auth']).then(() => {
+      this.router.navigate(['/home']).then(() => {
         window.location.reload();
       });
     } catch (error) {
