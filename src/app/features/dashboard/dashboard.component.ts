@@ -34,7 +34,6 @@ export class DashboardComponent {
 
   private loadDashboardData() {
     this.user = this.authService.getUserDetails();
-    console.log(this.user);
 
     this.meetingService.getUserMeetings(this.userId).subscribe((meetings) => {
       this.upcomingMeetings = meetings
