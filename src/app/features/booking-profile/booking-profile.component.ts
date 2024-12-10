@@ -51,6 +51,7 @@ export class BookingProfileComponent {
   ngOnInit() {
     this.hostSlug = this.route.snapshot.paramMap.get('userId');
     this.generateCalendarDates();
+    this.handleProfileVisit();
   }
 
   generateCalendarDates() {
@@ -228,4 +229,8 @@ export class BookingProfileComponent {
   // onCancel() {
   //   this.showModal = !this.showModal;
   // }
+
+  private handleProfileVisit() {
+    this.bookingService.recordProfileVisit(this.hostSlug);
+  }
 }
