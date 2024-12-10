@@ -18,6 +18,14 @@ export const routes: Routes = [
   },
 
   {
+    path: 'feedback',
+    loadComponent: () =>
+      import('./features/feedback/feedback.component').then(
+        (c) => c.FeedbackComponent
+      ),
+  },
+
+  {
     path: 'auth',
     loadChildren: () =>
       import('./features/auth/auth.routes').then((r) => r.authRoutes),
@@ -76,8 +84,8 @@ export const routes: Routes = [
     ],
   },
 
-  {
-    path: '**',
-    redirectTo: '',
-  },
+  // {
+  //   path: '**',
+  //   redirectTo: '',
+  // },
 ];
