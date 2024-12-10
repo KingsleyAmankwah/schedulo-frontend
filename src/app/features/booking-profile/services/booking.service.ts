@@ -12,4 +12,8 @@ export class BookingService {
   public scheduleMeeting(request: BookingRequest) {
     return this.http.post<BookingResponse>(`${meeting}/book-meeting`, request);
   }
+
+  public recordProfileVisit(slug: string | null) {
+    return this.http.post(`${meeting}/${slug}/visit`, {});
+  }
 }
