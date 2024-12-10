@@ -31,6 +31,7 @@ export interface UserDetails {
   role: string;
   profile: string;
   profilePhoto: string;
+  profileVisitCount: number;
 }
 
 export interface ErrorResponse {
