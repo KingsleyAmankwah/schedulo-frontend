@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CustomButtonComponent } from '../../shared/components/custom-button/custom-button.component';
 import { MeetingService } from './service/meeting.service';
 import { AuthService } from '../auth/services/auth.service';
@@ -29,7 +29,7 @@ export class MeetingsComponent {
   private meetingService = inject(MeetingService);
   private authService = inject(AuthService);
   private sharedService = inject(SharedService);
-  protected userMeetings: Meeting[] = [];
+  protected upcomingMeetings: Meeting[] = [];
   protected MeetingStatus = MeetingStatus;
   private userId: string | undefined =
     this.authService.getUserDetails()?.user_id;
@@ -50,11 +50,15 @@ export class MeetingsComponent {
   private fetchUserMeetings() {
     this.meetingService.getUserMeetings(this.userId).subscribe({
       next: (response) => {
-        this.userMeetings = response.sort((a, b) => {
-          const dateA = new Date(`${a.date} ${a.startTime}`);
-          const dateB = new Date(`${b.date} ${b.startTime}`);
-          return dateA.getTime() - dateB.getTime();
-        });
+        const today = new Date().toISOString().split('T')[0];
+        this.upcomingMeetings = response
+          .filter((meeting) => meeting.date === today)
+          .sort((a, b) => {
+            const dateA = new Date(`${a.date} ${a.startTime}`);
+            const dateB = new Date(`${b.date} ${b.startTime}`);
+            return dateA.getTime() - dateB.getTime();
+          });
+
         this.isLoading = false;
       },
       error: (error) => {
