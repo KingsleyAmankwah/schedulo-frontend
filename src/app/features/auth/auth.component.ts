@@ -12,6 +12,7 @@ import { AuthService } from './services/auth.service';
 import { LoginData, RegisterData, VerificationResponse } from './interfaces';
 import { SharedService } from '../../shared/services/shared.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-auth',
@@ -155,20 +156,17 @@ export class AuthComponent {
 
   protected googleLogin() {
     localStorage.setItem('oauthProvider', 'google');
-    window.location.href =
-      'http://139.162.158.158:8080/api/v1/oauth2/authorization/google';
+    window.location.href = `${environment.BASE_URL}/oauth2/authorization/google`;
   }
 
   protected githubLogin() {
     localStorage.setItem('oauthProvider', 'github');
-    window.location.href =
-      'http://139.162.158.158:8080/api/v1/oauth2/authorization/github';
+    window.location.href = `${environment.BASE_URL}/oauth2/authorization/githu`;
   }
 
   protected microsoftLogin() {
     localStorage.setItem('oauthProvider', 'microsoft');
-    window.location.href =
-      'http://139.162.158.158:8080/api/v1/oauth2/authorization/microsoft';
+    window.location.href = `${environment.BASE_URL}/oauth2/authorization/microsoft`;
   }
 
   protected LoginInputFields = [
