@@ -49,7 +49,8 @@ export class OauthCallbackComponent {
         localStorage.removeItem('oauthProvider');
         this.router.navigate(['/dashboard']);
       },
-      error: (error) => this.sharedService.errorToastr(error),
+      error: (error) =>
+        this.sharedService.errorToastr('OAuth token exchange failed'),
     });
   }
 }
