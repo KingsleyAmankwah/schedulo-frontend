@@ -24,7 +24,7 @@ export class ShareProfileModalComponent {
   @Output() closeModal = new EventEmitter();
 
   copied = false;
-  protected profileURL = 'http:localhost:4200/profile/';
+  protected profileURL = 'https://schedullr.vercel.app/profile/';
   protected generatedProfile = signal('');
   private authService = inject(AuthService);
 
