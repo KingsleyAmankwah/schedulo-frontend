@@ -156,19 +156,19 @@ export class AuthComponent {
   protected googleLogin() {
     localStorage.setItem('oauthProvider', 'google');
     window.location.href =
-      'http://localhost:8080/api/v1/oauth2/authorization/google';
+      'http://139.162.158.158:8080/api/v1/oauth2/authorization/google';
   }
 
   protected githubLogin() {
     localStorage.setItem('oauthProvider', 'github');
     window.location.href =
-      'http://localhost:8080/api/v1/oauth2/authorization/github';
+      'http://139.162.158.158:8080/api/v1/oauth2/authorization/github';
   }
 
   protected microsoftLogin() {
     localStorage.setItem('oauthProvider', 'microsoft');
     window.location.href =
-      'http://localhost:8080/api/v1/oauth2/authorization/microsoft';
+      'http://139.162.158.158:8080/api/v1/oauth2/authorization/microsoft';
   }
 
   protected LoginInputFields = [
