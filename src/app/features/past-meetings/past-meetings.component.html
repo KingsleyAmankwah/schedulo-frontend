@@ -1,0 +1,123 @@
+<div class="flex flex-col lg:border rounded-lg lg:px-4 py-4">
+  <!-- @if (userMeetings ! === []) {
+    <div class="flex justify-between">
+      <div> -->
+  <h1 class="font-semibold flex items-center gap-1 text-xl">
+    <span class="material-icons"> content_paste_off </span>
+    Past Meetings
+  </h1>
+  <p class="text-gray-500">
+    See your past meetings which were booked with you.
+  </p>
+  <!-- </div>
+  
+      <app-custom-button
+        [iconName]="'tune'"
+        [text]="'Filter'"
+        [buttonType]="'button'"
+      />
+    </div>
+    } -->
+
+  <div class="grid grid-cols-1 gap-4 mt-4 max-h-96 overflow-y-auto">
+    @if (pastMeetings.length === 0 && !isLoading) {
+    <div class="flex flex-col items-center justify-center p-8 text-center">
+      <svg
+        class="w-48 h-48 mb-6"
+        viewBox="0 0 240 240"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="120" cy="120" r="80" fill="#09080D" />
+
+        <path
+          d="M90 90H150M90 110H150M90 130H120"
+          stroke="white"
+          stroke-width="6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M80 160L160 80"
+          stroke="white"
+          stroke-width="8"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <h3 class="text-xl font-semibold mb-2 text-gray-800">No Past Meetings</h3>
+
+      <p class="text-gray-600 max-w-sm">
+        You don't have any past meetings at the moment.
+      </p>
+    </div>
+    }@else { @for (meeting of pastMeetings; track meeting.id) {
+    <div class="meeting border-b-2 pb-4">
+      <div class="duration">
+        <h2 class="text-gray-500">{{ meeting.date | date : "fullDate" }}</h2>
+        <p class="text-gray-500">
+          {{ meeting.startTime }} -
+          {{ meeting.endTime }}
+        </p>
+        <p class="text-gray-500">You and {{ meeting.inviteeName }}</p>
+
+        @if (meeting.status === MeetingStatus.Upcoming) {
+        <!-- <a
+            [href]="meeting.join_link"
+            class="underline flex items-center gap-2 text-primary-100"
+            target="_blank"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+            >
+              <rect x="1" y="4" width="8" height="8" rx="1" fill="currentColor" />
+              <path d="M10 8L14 5.5V10.5L10 8Z" fill="currentColor" />
+            </svg>
+            Join Meeting
+          </a> -->
+        }
+      </div>
+
+      <div class="details">
+        <h1>
+          {{ meeting.summary }}
+        </h1>
+      </div>
+
+      <!-- <div class="button flex space-x-4">
+        <app-custom-button
+          [iconName]="'event_repeat'"
+          [text]="'Reschedule'"
+          [buttonType]="'button'"
+          (buttonClick)="toggleScheduleModal(meeting)"
+        />
+        @if (meeting.status == MeetingStatus.Pending) {
+        <app-custom-button
+          [iconName]="'task_alt'"
+          [text]="'Accept'"
+          [buttonType]="'button'"
+          [buttonColor]="'primary'"
+          (buttonClick)="toggleAcceptModal(meeting)"
+        />
+
+        <app-custom-button
+          [iconName]="'block'"
+          [text]="'Decline'"
+          [buttonColor]="'danger'"
+          [buttonType]="'button'"
+          (buttonClick)="toggleDeclineModal(meeting)"
+        />
+        }
+      </div> -->
+    </div>
+
+    } }
+  </div>
+</div>
+
+@if (isLoading) {
+<app-loader />
+}
