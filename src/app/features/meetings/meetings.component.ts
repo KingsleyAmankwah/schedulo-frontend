@@ -50,9 +50,13 @@ export class MeetingsComponent {
   private fetchUserMeetings() {
     this.meetingService.getUserMeetings(this.userId).subscribe({
       next: (response) => {
-        const today = new Date().toISOString().split('T')[0];
+        const currentDate = new Date().setHours(0, 0, 0, 0);
         this.upcomingMeetings = response
-          .filter((meeting) => meeting.date === today)
+          .filter(
+            (meeting) =>
+              meeting.status === MeetingStatus.Upcoming &&
+              new Date(meeting.date).setHours(0, 0, 0, 0) >= currentDate
+          )
           .sort((a, b) => {
             const dateA = new Date(`${a.date} ${a.startTime}`);
             const dateB = new Date(`${b.date} ${b.startTime}`);
