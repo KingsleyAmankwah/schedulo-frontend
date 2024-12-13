@@ -69,12 +69,26 @@ export const cookie = {
   },
 
   remove: (name: string) => {
-    /*
-     * Sets the cookie with the specified name to an empty value and a past expiration date.
-     * Setting "expires" to a date in the past forces the browser to delete the cookie.
-     * The "path=/" ensures the cookie is deleted across the entire website.
+    /**
+     * First removal attempt: Generic cookie removal
+     * - Sets the cookie to an empty value
+     * - Sets Path to root ('/') to ensure site-wide removal
+     * - Max-Age=0 immediately expires the cookie
      */
-    document.cookie = `${name}=; Path/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+    document.cookie = `${name}=; Path=/; Max-Age=0;`;
+
+    /**
+     * Second removal attempt: Domain-specific cookie removal
+     * - Includes the current hostname to target domain-specific cookies
+     * - Ensures removal of cookies set with specific domain
+     * - Path set to root ('/')
+     * - Max-Age=0 immediately expires the cookie
+     *
+     * This is useful because cookies can be set with different domain scopes
+     * Some cookies might be set for the exact hostname,
+     * while others might be set for broader domain levels
+     */
+    document.cookie = `${name}=; Path=/; Domain=${window.location.hostname}; Max-Age=0;`;
   },
 };
 
