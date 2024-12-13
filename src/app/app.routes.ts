@@ -59,14 +59,6 @@ export const routes: Routes = [
       },
 
       {
-        path: 'meetings',
-        loadComponent: () =>
-          import('./features/meetings/meetings.component').then(
-            (c) => c.MeetingsComponent
-          ),
-      },
-
-      {
         path: 'pending-meetings',
         loadComponent: () =>
           import('./features/pending-meetings/pending-meetings.component').then(
@@ -75,7 +67,23 @@ export const routes: Routes = [
       },
 
       {
-        path: 'archives',
+        path: 'upcoming-meetings',
+        loadComponent: () =>
+          import('./features/meetings/meetings.component').then(
+            (c) => c.MeetingsComponent
+          ),
+      },
+
+      {
+        path: 'past-meetings',
+        loadComponent: () =>
+          import('./features/past-meetings/past-meetings.component').then(
+            (c) => c.PastMeetingsComponent
+          ),
+      },
+
+      {
+        path: 'decline-meetings',
         loadComponent: () =>
           import('./features/archives/archives.component').then(
             (c) => c.ArchivesComponent
