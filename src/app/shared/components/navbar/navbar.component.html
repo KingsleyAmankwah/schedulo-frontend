@@ -4,8 +4,6 @@
   <img
     [src]="'/assets/logo.png'"
     alt="logo"
-    width="150"
-    height="60"
     loading="eager"
     class="h-16 w-auto"
   />
@@ -28,6 +26,12 @@
       />
 
       <p class="name hidden lg:block">{{ userDetails?.name }}</p>
+    </div>
+
+    <div class="flex justify-center items-center sm:hidden">
+      <span class="material-icons cursor-pointer" (click)="toggleSidebar()">
+        menu
+      </span>
     </div>
     }@else {
 

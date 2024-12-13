@@ -3,6 +3,7 @@ import { CustomButtonComponent } from '../custom-button/custom-button.component'
 import { AuthService } from '../../../features/auth/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { UserDetails } from '../../../features/auth/interfaces';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-navbar',
@@ -18,7 +19,10 @@ export class NavbarComponent {
   @Output() openRegisterModal = new EventEmitter();
   @Output() openShareProfileModal = new EventEmitter();
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private sharedService: SharedService
+  ) {
     effect(() => {
       this.isLoggedIn = this.authService.isAuthenticated();
       this.userDetails = this.authService.getUserDetails();
@@ -35,5 +39,9 @@ export class NavbarComponent {
 
   public triggerShareProfileModal() {
     this.openShareProfileModal.emit();
+  }
+
+  toggleSidebar() {
+    this.sharedService.sidebarExpanded();
   }
 }
