@@ -1,14 +1,18 @@
 <aside class="h-screen shadow-xl w-[244px] px-8 pt-4 fixed">
-  <div class="flex flex-col space-y-4">
-    @for (nav of sidebarNavItems; track $index) { @if (nav.name !== 'Logout') {
-
-    <a [routerLink]="nav.location">
-      {{ nav.name }}
-    </a>
-    }@else {
-    <a href="javascript:void(0)" (click)="triggerLogoutModal()">{{
-      nav.name
-    }}</a>
-    } }
+  <div class="flex flex-col space-y-7">
+    @for (nav of sidebarNavItems; track $index) {
+    <div class="flex flex-row items-center space-x-3">
+      <span class="material-icons">{{ nav.icon }}</span>
+      @if (nav.name !== 'Logout') {
+      <a [routerLink]="nav.location">
+        {{ nav.name }}
+      </a>
+      }@else {
+      <a href="javascript:void(0)" (click)="triggerLogoutModal()"
+        >{{ nav.name }}
+      </a>
+      }
+    </div>
+    }
   </div>
 </aside>

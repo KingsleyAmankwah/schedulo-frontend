@@ -20,20 +20,27 @@ export class SidebarComponent {
     {
       name: 'Dashboard',
       location: 'dashboard',
+      icon: 'dashboard',
     },
-
     {
-      name: 'Meetings',
+      name: 'Upcoming Meetings',
       location: 'meetings',
+      icon: 'calendar_today',
     },
-
     {
-      name: 'Archives',
-      location: 'archives',
+      name: 'Pending Meetings',
+      location: 'pending-meetings',
+      icon: 'pending_actions',
     },
-
+    {
+      name: 'Declined Meetings',
+      location: 'archives',
+      icon: 'archive',
+    },
     {
       name: 'Logout',
+      location: 'logout',
+      icon: 'logout',
     },
   ];
 }
