@@ -3,13 +3,30 @@ import { AuthService } from '../auth/services/auth.service';
 import { UserDetails } from '../auth/interfaces';
 import { Meeting } from '../meetings/types';
 import { MeetingService } from '../meetings/service/meeting.service';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'USER' | 'ADMIN';
+  status: 'ACTIVE' | 'REVOKED';
+  registeredDate: string;
+}
+
+interface Feedback {
+  id: number;
+  user: string;
+  message: string;
+  rating: number;
+  date: string;
+}
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -25,11 +42,33 @@ export class DashboardComponent {
   upcomingMeetings: Meeting[] = [];
   pendingMeetings: Meeting[] = [];
   totalContacts = 0;
-
+  users: User[] = [];
+  feedbacks: Feedback[] = [];
   constructor() {}
 
   ngOnInit() {
     this.loadDashboardData();
+
+    this.users = [
+      {
+        id: 1,
+        name: 'John Doe',
+        email: 'john@example.com',
+        role: 'USER',
+        status: 'ACTIVE',
+        registeredDate: '2024-01-15',
+      },
+    ];
+
+    this.feedbacks = [
+      {
+        id: 1,
+        user: 'John Doe',
+        message: 'Great platform!',
+        rating: 5,
+        date: '2024-03-10',
+      },
+    ];
   }
 
   private loadDashboardData() {
@@ -56,6 +95,7 @@ export class DashboardComponent {
         });
       this.pendingMeetings = meetings.filter((m) => m.status == 'PENDING');
       this.totalMeetings = meetings.length;
+      // this.up
     });
   }
 }

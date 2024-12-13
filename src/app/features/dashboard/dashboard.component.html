@@ -1,5 +1,8 @@
 <div class="mx-auto py-8">
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+  <div
+    *ngIf="user?.role === 'CLIENT'"
+    class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6"
+  >
     <!-- User Profile Section -->
     <div class="md:col-span-1 bg-white shadow-lg rounded-xl p-6">
       <div class="flex flex-col items-center">
@@ -35,12 +38,6 @@
               </p>
               <p class="text-sm text-primary-200">Total Meetings</p>
             </div>
-            <!-- <div>
-              <p class="font-bold text-xl">
-                {{ completedMeetings }}
-              </p>
-              <p class="text-sm text-gray-500">Completed</p>
-            </div> -->
           </div>
         </div>
       </div>
@@ -49,7 +46,7 @@
     <!-- Meetings and Metrics Section -->
     <div class="md:col-span-2 space-y-6">
       <!-- Quick Stats -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
         <div class="bg-blue-50 p-4 rounded-xl shadow-sm">
           <div class="flex items-center justify-between">
             <div>
@@ -102,7 +99,7 @@
             </svg>
           </div>
         </div>
-        <div class="bg-purple-50 p-4 rounded-xl shadow-sm">
+        <!-- <div class="bg-purple-50 p-4 rounded-xl shadow-sm">
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-sm text-purple-600 font-medium">
@@ -125,7 +122,7 @@
               />
             </svg>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- Upcoming Meetings -->
@@ -177,116 +174,126 @@
     </div>
   </div>
 
-  <!-- Additional Insights -->
-  <!-- 
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-    
-    <div class="bg-white shadow-lg rounded-xl p-6">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
-      <div class="space-y-4">
-        @for (activity of recentActivities; track activity.id) {
-        <div class="flex items-center space-x-4 border-b pb-2 last:border-b-0">
-          <div class="bg-gray-100 p-2 rounded-full">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-gray-600"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"
-              />
-              <path
-                d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"
-              />
-            </svg>
-          </div>
-          <div>
-            <p class="font-medium">
-              {{ activity.description }}
-            </p>
-            <p class="text-sm text-gray-500">
-              {{ activity.timestamp | timeAgo }}
-            </p>
-          </div>
+  <div class="p-6 bg-gray-50 min-h-screen">
+    @if (user?.role === 'ADMIN') {
+    <div class="max-w-6xl mx-auto space-y-6">
+      <!-- Users Management Card -->
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div
+          class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white"
+        >
+          <div class="relative"></div>
         </div>
-        }
-      </div>
-    </div> -->
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" class="p-4"></th>
+              <th scope="col" class="px-6 py-3">Name</th>
+              <th scope="col" class="px-6 py-3">Position</th>
+              <th scope="col" class="px-6 py-3">Status</th>
+              <th scope="col" class="px-6 py-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600"
+            >
+              <td class="w-4 p-4"></td>
+              <th
+                scope="row"
+                class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"
+              >
+                <img
+                  class="w-10 h-10 rounded-full"
+                  src="https://img.freepik.com/free-vector/creative-nerd-logo-template_23-2149218770.jpg?t=st=1733994104~exp=1733997704~hmac=b7cb4b3e1e8c17f947812926f9cea83ea6a205cde78fc9da3316021b7c283dd3&w=740"
+                  alt="Jese image"
+                />
+                <div class="ps-3">
+                  <div class="text-base font-semibold">Neil Sims</div>
+                  <div class="font-normal text-gray-500">
+                    neil.simsflowbite.com
+                  </div>
+                </div>
+              </th>
+              <td class="px-6 py-4">React Developer</td>
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+                  Online
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <a
+                  href="#"
+                  class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >Edit user</a
+                >
+              </td>
+            </tr>
 
-  <!-- Quick Actions -->
-  <!-- <div class="bg-white shadow-lg rounded-xl p-6">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
-      <div class="grid grid-cols-3 gap-4">
-        <button
-          routerLink="/availability"
-          class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-primary-100 mb-2"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span class="text-sm">Set Availability</span>
-        </button>
-        <button
-          routerLink="/meetings"
-          class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-green-600 mb-2"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-          <span class="text-sm">Schedule Meeting</span>
-        </button>
-        <button
-          routerLink="/settings"
-          class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-blue-600 mb-2"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <span class="text-sm">Settings</span>
-        </button>
+            <tr class="bg-white hover:bg-gray-50">
+              <td class="w-4 p-4"></td>
+              <th
+                scope="row"
+                class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+              >
+                <img
+                  class="w-10 h-10 rounded-full"
+                  src="/docs/images/people/profile-picture-4.jpg"
+                  alt="Jese image"
+                />
+                <div class="ps-3">
+                  <div class="text-base font-semibold">Leslie Livingston</div>
+                  <div class="font-normal text-gray-500">leslie.com</div>
+                </div>
+              </th>
+              <td class="px-6 py-4">SEO Specialist</td>
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <div class="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div>
+                  Offline
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <a
+                  href="#"
+                  class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >Edit user</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div> 
-    
+
+      <!-- Feedbacks Management Card -->
+      <div class="bg-white shadow-md rounded-lg">
+        <div class="p-4 border-b">
+          <h2 class="text-xl font-semibold">User Feedbacks</h2>
+        </div>
+        <table class="w-full">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="p-3 text-left">User</th>
+              <th class="p-3 text-left">Message</th>
+              <th class="p-3 text-left">Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (feedback of feedbacks; track feedback.id) {
+            <tr class="border-b">
+              <td class="p-3">{{ feedback.user }}</td>
+              <td class="p-3">{{ feedback.message }}</td>
+              <td class="p-3">{{ feedback.rating }}/5</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    }
   </div>
-    -->
 </div>
+<!-- </div> -->
