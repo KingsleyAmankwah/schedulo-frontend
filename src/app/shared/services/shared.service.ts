@@ -22,6 +22,25 @@ export class SharedService {
     this._showLoginModal.set(false);
   }
 
+  private _sidebarExpanded = signal(false);
+  sidebarExpanded = this._sidebarExpanded.asReadonly();
+
+  toggleSidebar() {
+    this._sidebarExpanded.update((current) => !current);
+  }
+
+  setSidebarState(state: boolean) {
+    this._sidebarExpanded.set(state);
+  }
+
+  openSidebar(): void {
+    this._sidebarExpanded.set(true);
+  }
+
+  closeSidebar(): void {
+    this._sidebarExpanded.set(false);
+  }
+
   public toasts: BehaviorSubject<Toast[]> = new BehaviorSubject<Toast[]>([]);
   public successToastr(message: string) {
     this.showToast({ message, type: 'success', id: generateGuid() });
@@ -44,7 +63,7 @@ export class SharedService {
   }
 
   private removeToast(toast: Toast) {
-    setTimeout(() => this.closeToast(toast.id), 5000);
+    setTimeout(() => this.closeToast(toast.id), 7000);
   }
 
   private showToast(toast: Toast) {
