@@ -85,6 +85,8 @@ export class MeetingsComponent {
 
   protected toggleScheduleModal(meeting: Meeting) {
     this.meetingId = meeting.id;
+    this.inviteeEmail = meeting.inviteeEmail;
+    this.inviteeName = meeting.inviteeName;
     this.isRescheduleModalOpen = !this.isRescheduleModalOpen;
   }
 
