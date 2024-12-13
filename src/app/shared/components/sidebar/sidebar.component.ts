@@ -22,19 +22,28 @@ export class SidebarComponent {
       location: 'dashboard',
       icon: 'dashboard',
     },
-    {
-      name: 'Upcoming Meetings',
-      location: 'meetings',
-      icon: 'calendar_today',
-    },
+
     {
       name: 'Pending Meetings',
       location: 'pending-meetings',
       icon: 'pending_actions',
     },
+
+    {
+      name: 'Upcoming Meetings',
+      location: 'upcoming-meetings',
+      icon: 'calendar_today',
+    },
+
+    {
+      name: 'Past Meetings',
+      location: 'past-meetings',
+      icon: 'content_paste_off',
+    },
+
     {
       name: 'Declined Meetings',
-      location: 'archives',
+      location: 'decline-meetings',
       icon: 'archive',
     },
     {
