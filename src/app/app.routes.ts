@@ -67,6 +67,14 @@ export const routes: Routes = [
       },
 
       {
+        path: 'pending-meetings',
+        loadComponent: () =>
+          import('./features/pending-meetings/pending-meetings.component').then(
+            (c) => c.PendingMeetingsComponent
+          ),
+      },
+
+      {
         path: 'archives',
         loadComponent: () =>
           import('./features/archives/archives.component').then(
@@ -84,8 +92,8 @@ export const routes: Routes = [
     ],
   },
 
-  // {
-  //   path: '**',
-  //   redirectTo: '',
-  // },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
