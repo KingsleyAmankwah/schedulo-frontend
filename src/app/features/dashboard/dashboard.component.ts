@@ -33,9 +33,9 @@ interface Feedback {
 export class DashboardComponent {
   private authService = inject(AuthService);
   private meetingService = inject(MeetingService);
-  private userId = this.authService.getUserDetails()?.user_id;
-
+  private userId = this.authService.getUserId;
   protected user: UserDetails | null = null;
+
   profileVisits = 0;
   totalMeetings = 0;
   completedMeetings = 0;
@@ -44,36 +44,16 @@ export class DashboardComponent {
   totalContacts = 0;
   users: User[] = [];
   feedbacks: Feedback[] = [];
-  constructor() {}
+
+  constructor() {
+    this.getUserInfo();
+  }
 
   ngOnInit() {
     this.loadDashboardData();
-
-    this.users = [
-      {
-        id: 1,
-        name: 'John Doe',
-        email: 'john@example.com',
-        role: 'USER',
-        status: 'ACTIVE',
-        registeredDate: '2024-01-15',
-      },
-    ];
-
-    this.feedbacks = [
-      {
-        id: 1,
-        user: 'John Doe',
-        message: 'Great platform!',
-        rating: 5,
-        date: '2024-03-10',
-      },
-    ];
   }
 
   private loadDashboardData() {
-    this.user = this.authService.getUserDetails();
-
     this.meetingService.getUserMeetings(this.userId).subscribe((meetings) => {
       this.upcomingMeetings = meetings
         .filter((m) => {
@@ -95,7 +75,14 @@ export class DashboardComponent {
         });
       this.pendingMeetings = meetings.filter((m) => m.status == 'PENDING');
       this.totalMeetings = meetings.length;
-      // this.up
+    });
+  }
+
+  private getUserInfo() {
+    this.authService.fetchUserDetails(this.userId).subscribe({
+      next: (response: UserDetails) => {
+        this.user = response;
+      },
     });
   }
 }

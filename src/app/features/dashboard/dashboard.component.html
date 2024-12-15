@@ -8,7 +8,7 @@
       <div class="flex flex-col items-center">
         <div class="relative">
           <img
-            [src]="user?.profilePhoto || '/assets/icons/auth-user-icon.svg'"
+            [src]="user?.profileImageUrl || '/assets/icons/auth-user-icon.svg'"
             alt="Profile Picture"
             class="w-32 h-32 rounded-full object-cover mb-4"
           />
@@ -22,7 +22,7 @@
           {{ user?.name }}
         </h2>
         <p class="text-gray-500 text-xs">
-          {{ user?.sub }}
+          {{ user?.email }}
         </p>
         <div class="mt-4 w-full">
           <div class="grid grid-cols-2 gap-4 text-center">
@@ -99,6 +99,61 @@
             </svg>
           </div>
         </div>
+
+        <div class="bg-gray-50 p-4 rounded-xl shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm text-gray-600 font-medium">Past Meetings</h3>
+              <p class="text-2xl font-bold text-gray-800">0</p>
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 text-gray-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19.5 12l-7.5-6-7.5 6v9a2 2 0 002 2h11a2 2 0 002-2z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <div class="bg-red-50 p-4 rounded-xl shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm text-red-600 font-medium">
+                Declined Meetings
+              </h3>
+              <p class="text-2xl font-bold text-red-800">0</p>
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 text-red-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+
         <!-- <div class="bg-purple-50 p-4 rounded-xl shadow-sm">
           <div class="flex items-center justify-between">
             <div>
