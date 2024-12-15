@@ -231,6 +231,13 @@ export class BookingProfileComponent {
   // }
 
   private handleProfileVisit() {
-    this.bookingService.recordProfileVisit(this.hostSlug);
+    this.bookingService.recordProfileVisit(this.hostSlug).subscribe({
+      next: (response) => {
+        console.log(response);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 }
