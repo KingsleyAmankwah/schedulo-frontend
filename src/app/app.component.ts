@@ -1,11 +1,12 @@
 import { Component, effect } from '@angular/core';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { AuthComponent } from './features/auth/auth.component';
 import { CommonModule } from '@angular/common';
 import { SharedService } from './shared/services/shared.service';
 import { ShareProfileModalComponent } from './shared/components/share-profile-modal/share-profile-modal.component';
-import { ToastComponent } from "./shared/components/toast/toast.component";
+import { ToastComponent } from './shared/components/toast/toast.component';
+import { AuthService } from './features/auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,8 @@ import { ToastComponent } from "./shared/components/toast/toast.component";
     NavbarComponent,
     AuthComponent,
     ShareProfileModalComponent,
-    ToastComponent
-],
+    ToastComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -29,7 +30,7 @@ export class AppComponent {
 
   constructor(
     public sharedService: SharedService,
-    private route: ActivatedRoute
+    private authService: AuthService
   ) {
     effect(() => {
       if (this.sharedService.showLoginModal()) {
@@ -39,6 +40,10 @@ export class AppComponent {
         this.sharedService.closeLoginModal();
       }
     });
+  }
+
+  ngOnInit() {
+    this.authService.checkAuthStatus();
   }
 
   protected onOpenLoginModal() {
