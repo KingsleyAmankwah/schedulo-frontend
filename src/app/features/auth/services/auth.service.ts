@@ -7,12 +7,13 @@ import {
   RegisterData,
   UserDetails,
   VerificationResponse,
+  JwtPayLoad,
 } from '../interfaces';
-import { auth } from '../../../shared/constants/apiEndpoints';
+import { auth, user } from '../../../shared/constants/apiEndpoints';
 import { cookie } from '../../../shared/utils';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-import { map, Subject, take, tap } from 'rxjs';
+import { BehaviorSubject, map, Subject, take, tap } from 'rxjs';
 import { SharedService } from '../../../shared/services/shared.service';
 
 @Injectable({
@@ -21,22 +22,29 @@ import { SharedService } from '../../../shared/services/shared.service';
 export class AuthService {
   private sharedService = inject(SharedService);
   public authStatus: WritableSignal<boolean> = signal(false);
-  private userDetails = signal<UserDetails | null>(null);
+
+  // User details as a BehaviorSubject
+  private userSubject = new BehaviorSubject<UserDetails | null>(null);
+  private userIdSubject = new BehaviorSubject<string | undefined>(undefined);
+
+  // Signal for token refresh
   private refreshTokenInProgress: WritableSignal<boolean> = signal(false);
   private refreshTokenSubject: Subject<string> = new Subject<string>();
 
-  private accessTokenKey = 'access_token';
-  private refreshTokenKey = 'refresh_token';
+  // Keys for tokens in cookies
+  private readonly accessTokenKey = 'access_token';
+  private readonly refreshTokenKey = 'refresh_token';
 
   constructor(private http: HttpClient, private router: Router) {
-    this.checkAuthStatus();
+    // this.checkAuthStatus();
   }
 
-  private checkAuthStatus() {
+  public checkAuthStatus() {
     const accessToken = cookie.get(this.accessTokenKey);
     if (accessToken && !this.isTokenExpired(accessToken)) {
       this.authStatus.set(true);
       this.setUserDetailsFromToken(accessToken);
+
       this.redirectToAppropriateRoute();
     } else if (accessToken && this.isTokenExpired(accessToken)) {
       this.refreshToken()
@@ -50,8 +58,7 @@ export class AuthService {
           },
         });
     } else {
-      this.authStatus.set(false);
-      this.userDetails.set(null);
+      this.clearAuthState();
     }
   }
 
@@ -181,12 +188,15 @@ export class AuthService {
       });
   }
 
+  public fetchUserDetails(userId: string | undefined) {
+    return this.http.get<UserDetails>(`${user}/${userId}`);
+  }
+
   public logout() {
     try {
       cookie.remove(this.accessTokenKey);
       cookie.remove(this.refreshTokenKey);
-      this.authStatus.set(false);
-      this.userDetails.set(null);
+      this.clearAuthState();
 
       this.router.navigate(['/home']).then(() => {
         window.location.reload();
@@ -205,17 +215,17 @@ export class AuthService {
     return this.authStatus;
   }
 
-  get getUserDetails(): WritableSignal<UserDetails | null> {
-    return this.userDetails;
+  get getUserId(): string | undefined {
+    return this.userIdSubject.value;
   }
 
-  public setUserDetailsFromToken(token: string) {
+  public setUserDetailsFromToken(token: string): void {
     try {
-      const decodedToken: UserDetails = jwtDecode(token);
-      this.userDetails.set(decodedToken);
-    } catch (error) {
-      console.error('Error decoding token', error);
-      this.userDetails.set(null);
+      const decodedToken: JwtPayLoad = jwtDecode(token);
+      const userId = decodedToken.user_id;
+      this.userIdSubject.next(userId);
+    } catch {
+      this.clearAuthState();
     }
   }
 
@@ -231,5 +241,11 @@ export class AuthService {
       value: refreshToken,
       hours: 168,
     });
+  }
+
+  // Helper to clear auth state
+  private clearAuthState(): void {
+    this.authStatus.set(false);
+    this.userSubject.next(null);
   }
 }
