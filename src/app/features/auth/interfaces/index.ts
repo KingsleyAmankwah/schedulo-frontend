@@ -1,3 +1,6 @@
+import { Availabilities } from '../../availability/types';
+import { Meeting } from '../../meetings/types';
+
 export enum UserRole {
   CLIENT = 'client',
   ADMIN = 'admin',
@@ -24,14 +27,36 @@ export interface LoginData {
   password: string;
 }
 
-export interface UserDetails {
-  sub: string;
-  name: string;
+export interface JwtPayLoad {
   user_id: string;
-  role: string;
-  profile: string;
-  profilePhoto: string;
+}
+
+export interface UserDetails {
+  id: string;
+  name: string;
+  email: string;
+  oauthProvider: string;
+  oauthId: string;
+  profileImageUrl: string;
+  profileLink: string;
   profileVisitCount: number;
+  status: string;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
+  availabilities: Availabilities[];
+  events: [];
+  meetings: Meeting[];
+  enabled: boolean;
+  username: string;
+  authorities: Authority[];
+  accountNonExpired: boolean;
+  credentialsNonExpired: boolean;
+  accountNonLocked: boolean;
+}
+
+export interface Authority {
+  authority: string;
 }
 
 export interface ErrorResponse {
