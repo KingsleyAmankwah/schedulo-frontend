@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, Output } from '@angular/core';
+import { Component, effect, EventEmitter, Output, signal } from '@angular/core';
 import { CustomButtonComponent } from '../custom-button/custom-button.component';
 import { AuthService } from '../../../features/auth/services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { SharedService } from '../../services/shared.service';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
-  protected isLoggedIn = false;
+  protected isLoggedIn = signal(false);
   protected userDetails: UserDetails | null = null;
   @Output() openLoginModal = new EventEmitter();
   @Output() openRegisterModal = new EventEmitter();
@@ -24,8 +24,11 @@ export class NavbarComponent {
     private sharedService: SharedService
   ) {
     effect(() => {
-      this.isLoggedIn = this.authService.isAuthenticated();
-      this.userDetails = this.authService.getUserDetails();
+      this.isLoggedIn = this.authService.isAuthenticated;
+      if (this.isLoggedIn()) {
+        const userId = this.authService.getUserId;
+        return this.getUserInfo(userId);
+      }
     });
   }
 
@@ -43,5 +46,16 @@ export class NavbarComponent {
 
   toggleSidebar() {
     this.sharedService.sidebarExpanded();
+  }
+
+  protected getUserInfo(userId: string | undefined) {
+    this.authService.fetchUserDetails(userId).subscribe({
+      next: (response: UserDetails) => {
+        this.userDetails = response;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 }
