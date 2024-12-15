@@ -31,8 +31,7 @@ export class PendingMeetingsComponent {
 
   protected pendingMeetings: Meeting[] = [];
   protected MeetingStatus = MeetingStatus;
-  private userId: string | undefined =
-    this.authService.getUserDetails()?.user_id;
+  private userId = this.authService.getUserId;
   meetingId = '';
   inviteeName = '';
   inviteeEmail = '';

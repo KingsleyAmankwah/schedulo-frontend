@@ -37,7 +37,7 @@ export class AvailabilityComponent implements OnInit {
   }));
 
   ngOnInit() {
-    this.userId = this.authService.getUserDetails()?.user_id;
+    this.userId = this.authService.getUserId;
     // this.getUserAvailability();
   }
   protected validateAvalability() {
