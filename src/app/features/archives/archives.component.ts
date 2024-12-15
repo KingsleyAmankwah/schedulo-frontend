@@ -18,7 +18,7 @@ import { SharedService } from '../../shared/services/shared.service';
 export class ArchivesComponent {
   private meetingService = inject(MeetingService);
   private authService = inject(AuthService);
-  private userId = this.authService.getUserDetails()?.user_id;
+  private userId = this.authService.getUserId;
   protected userDeclinedMeetings: Meeting[] = [];
   protected isLoading = true;
 
