@@ -53,7 +53,6 @@ export class DashboardComponent {
 
   ngOnInit() {
     this.loadDashboardData();
-    this.isLoading = false;
   }
 
   private getUserInfo() {
@@ -65,44 +64,52 @@ export class DashboardComponent {
   }
 
   private loadDashboardData() {
-    this.meetingService.getUserMeetings(this.userId).subscribe((meetings) => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Normalize to midnight for date-only comparison
+    this.isLoading = true; // Ensure loader is shown before data fetch
+    this.meetingService.getUserMeetings(this.userId).subscribe({
+      next: (meetings) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-      // Filter upcoming meetings
-      this.upcomingMeetings = meetings
-        .filter((m) => {
+        // Filter upcoming meetings
+        this.upcomingMeetings = meetings
+          .filter((m) => {
+            const meetingDate = new Date(m.date);
+            return (
+              m.status === MeetingStatus.Upcoming &&
+              meetingDate.getTime() === today.getTime()
+            );
+          })
+          .sort((a, b) => {
+            const timeA = new Date(`1970/01/01 ${a.startTime}`);
+            const timeB = new Date(`1970/01/01 ${b.startTime}`);
+            return timeA.getTime() - timeB.getTime();
+          });
+
+        // Filter past meetings (based only on date)
+        this.pastMeetings = meetings.filter((m) => {
           const meetingDate = new Date(m.date);
-          return (
-            m.status === MeetingStatus.Upcoming &&
-            meetingDate.getTime() === today.getTime()
-          );
-        })
-        .sort((a, b) => {
-          const timeA = new Date(`1970/01/01 ${a.startTime}`);
-          const timeB = new Date(`1970/01/01 ${b.startTime}`);
-          return timeA.getTime() - timeB.getTime();
+          meetingDate.setHours(0, 0, 0, 0);
+          return meetingDate < today;
         });
 
-      // Filter past meetings (based only on date)
-      this.pastMeetings = meetings.filter((m) => {
-        const meetingDate = new Date(m.date);
-        meetingDate.setHours(0, 0, 0, 0); // Normalize meetingDate to midnight
-        return meetingDate < today; // Fetch meetings before today
-      });
+        // Filter pending meetings
+        this.pendingMeetings = meetings.filter(
+          (m) => m.status === MeetingStatus.Pending
+        );
 
-      // Filter pending meetings
-      this.pendingMeetings = meetings.filter(
-        (m) => m.status === MeetingStatus.Pending
-      );
+        // Filter declined meetings
+        this.declinedMeetings = meetings.filter(
+          (m) => m.status === MeetingStatus.Cancelled
+        );
 
-      // Filter declined meetings
-      this.declinedMeetings = meetings.filter(
-        (m) => m.status === MeetingStatus.Cancelled
-      );
-
-      // Calculate total meetings
-      this.totalMeetings = meetings.length;
+        // Calculate total meetings
+        this.totalMeetings = meetings.length; 
+        this.isLoading = false; // Set loading to false after data is loaded
+      },
+      error: (error) => {
+        console.error('Error loading meetings', error);
+        this.isLoading = false; // Ensure loader is hidden even on error
+      },
     });
   }
 }

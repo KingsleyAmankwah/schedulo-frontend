@@ -175,10 +175,10 @@
         <div class="space-y-4">
           @for (meeting of upcomingMeetings.slice(0, 3); track meeting.id) {
           <div
-            class="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+            class="flex items-center justify-between p-2 bg-gray-50 shadow-xl rounded-lg"
           >
             <div>
-              <h3 class="font-semibold w-[85%]">
+              <h3 class="font-semibold text-xs w-[80%]">
                 {{ meeting.summary }}
               </h3>
               <p class="text-sm text-gray-500">
@@ -187,13 +187,13 @@
                 {{ meeting.startTime }} - {{ meeting.endTime }}
               </p>
             </div>
-            <div class="flex items-center space-x-2">
-              <span class="text-sm text-gray-600">
+            <div class="flex justify-center items-center gap-2">
+              <span class="text-xs text-gray-600">
                 {{ meeting.inviteeName }}
               </span>
               <img
                 [src]="'/assets/icons/auth-user-icon.svg'"
-                class="w-5 h-5 rounded-full"
+                class="w-4 h-4 rounded-full"
               />
             </div>
           </div>
