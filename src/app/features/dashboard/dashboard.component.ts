@@ -5,7 +5,7 @@ import { Meeting, MeetingStatus } from '../meetings/types';
 import { MeetingService } from '../meetings/service/meeting.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { LoaderComponent } from "../../shared/components/loader/loader.component";
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 interface User {
   id: number;
@@ -36,7 +36,7 @@ export class DashboardComponent {
   private meetingService = inject(MeetingService);
   private userId = this.authService.getUserId;
   protected user: UserDetails | null = null;
-  isLoading = false;
+  isLoading = true;
   profileVisits = 0;
   totalMeetings = 0;
   declinedMeetings: Meeting[] = [];
@@ -53,6 +53,7 @@ export class DashboardComponent {
 
   ngOnInit() {
     this.loadDashboardData();
+    this.isLoading = false;
   }
 
   private getUserInfo() {
@@ -64,7 +65,6 @@ export class DashboardComponent {
   }
 
   private loadDashboardData() {
-    this.isLoading = true;
     this.meetingService.getUserMeetings(this.userId).subscribe((meetings) => {
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Normalize to midnight for date-only comparison
@@ -104,6 +104,5 @@ export class DashboardComponent {
       // Calculate total meetings
       this.totalMeetings = meetings.length;
     });
-    this.isLoading = false;
   }
 }
