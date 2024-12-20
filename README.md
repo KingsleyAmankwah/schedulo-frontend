@@ -72,7 +72,7 @@ ScheduloFrontend is the Angular-based frontend application for the Schedulo proj
 1. Start the development server:
 
    ```bash
-   ng serve
+   ng serve -o
    ```
 
 2. Open your browser and navigate to:
